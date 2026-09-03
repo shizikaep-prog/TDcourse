@@ -52,7 +52,12 @@ function updateTravel() {
     if (!program || !track) return;
     const viewport = document.querySelector('.program-viewport');
     const pad = viewport ? parseFloat(getComputedStyle(viewport).paddingLeft) || 94 : 94;
-    currentTravel = Math.max(0, track.scrollWidth - window.innerWidth + pad);
+    // The desktop canvas is capped at 1920px on wide monitors. Use the
+    // actual program viewport instead of the full browser width, otherwise
+    // the sticky travel distance and its vertical spacer become incorrect
+    // on 2K/4K screens.
+    const viewportWidth = viewport ? viewport.clientWidth : window.innerWidth;
+    currentTravel = Math.max(0, track.scrollWidth - viewportWidth + pad);
     program.style.setProperty('--program-travel', `${currentTravel}px`);
     currentProgress = Math.min(currentProgress, currentTravel);
     const introHeight = mobileProgramQuery.matches && programIntro ? programIntro.offsetHeight : 0;
