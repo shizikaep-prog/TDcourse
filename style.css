@@ -174,7 +174,7 @@ button { font: inherit; }
     animation-delay: -4.8s;
 }
 
-/* Исправленные анимации с rotate */
+/* Анимации для треугольников About */
 @keyframes about-sway-1 {
     0% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
     50% {transform: scale(1) translate(2px, -38px) rotate(1deg);}
@@ -390,7 +390,7 @@ button { font: inherit; }
     50% {translate: 3px -24px;scale: 1;rotate: 1deg;}
 }
 
-/* ===== ИСПРАВЛЕННАЯ СЕКЦИЯ PURCHASE ===== */
+/* Секция Purchase */
 .purchase {
     position: relative;
     background: transparent;
@@ -474,7 +474,7 @@ button { font: inherit; }
     100% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
 }
 
-/* ===== МОБИЛЬНАЯ ПОКУПКА ===== */
+/* Мобильная версия Purchase */
 @media (max-width: 768px) {
     .purchase-inner {
         aspect-ratio: auto;
@@ -501,7 +501,7 @@ button { font: inherit; }
     }
 }
 
-/* Остальные стили (Header, Hero, About, Player, Program, FAQ, Footer) без изменений */
+/* Стили для Header, Hero, About, Player, Program, FAQ, Footer */
 /* Header */
 .site-header {
     position: absolute;
@@ -1195,7 +1195,7 @@ button { font: inherit; }
     align-self: stretch;
 }
 
-/* В промежутке 769–1400px используется исходный десктопный макет. */
+/* Десктопный макет для 769–1400px */
 @media (max-width: 600px) {
     .site-header { left: 16px; right: 16px; top: 10px; gap: 8px; height: 56px; }
     .logo { width: 48px; height: 48px; }
@@ -1258,23 +1258,17 @@ button { font: inherit; }
     .lesson-track img { max-height: 60vh; }
 }
 
-/* ============================================================
-   МОБИЛЬНАЯ ВЕРСИЯ HERO — hero-right как фон под hero-left
-   ============================================================ */
-
-/* ============================================================
-   ЗАПРЕТ ГОРИЗОНТАЛЬНОЙ ПРОКРУТКИ НА МОБИЛЬНЫХ (кроме program)
-   ============================================================ */
-
+/* Мобильная версия Hero: hero-right как фон для hero-left */
+/* Запрет горизонтальной прокрутки на мобильных (кроме program) */
 @media (max-width: 768px) {
-    /* - горизонтальный скролл на всём документе */
+    /* Отключение горизонтального скролла для html и body */
     html,
     body {
         overflow-x: hidden !important;
         max-width: 100% !important;
     }
 
-    /* основные блоки не выходят за пределы экрана */
+    /* Блоки ограничены шириной viewport */
     .hero,
     .about,
     .player-section,
@@ -1286,28 +1280,22 @@ button { font: inherit; }
         overflow-x: hidden;
     }
 
-    /* Контейнер hero-right и его видеообёртка — обрезаем лишнее */
+    /* hero-right и видеообёртка обрезаются по контейнеру */
     .hero-right,
     .hero-videos {
         overflow: hidden !important;
         max-width: 100%;
     }
 
-    /* Сама секция program — оставить без ограничений,
-       горизонтальное движение реализовано через transform,
-       не через скролл браузера */
+    /* program: движение через transform, скролл не используется */
     .program-shell {
         overflow-x: visible !important;
         max-width: 100vw;
     }   
 }
 
-/* ============================================================
-   НОВАЯ МОБИЛЬНАЯ ШАПКА (две кнопки по краям)
-   Добавлено в КОНЕЦ style.css
-   ============================================================ */
-
-/* По умолчанию мобильная шапка скрыта */
+/* Мобильная шапка (две кнопки по краям) */
+/* Мобильная шапка скрыта по умолчанию */
 .mobile-header {
     display: none;
     position: absolute;
@@ -1320,7 +1308,7 @@ button { font: inherit; }
     align-items: center;
 }
 
-/* Обе кнопки – относительные контейнеры для SVG и иконок */
+/* Кнопки — относительные контейнеры для SVG и иконок */
 .mobile-header-left,
 .mobile-header-right {
     position: relative;
@@ -1331,7 +1319,7 @@ button { font: inherit; }
     text-decoration: none;
 }
 
-/* Фиксируем размеры кнопок согласно макету */
+/* Размеры кнопок по макету */
 .mobile-header-left {
     width: 70px;
     height: 40px;
@@ -1348,10 +1336,9 @@ button { font: inherit; }
     height: 100%;
 }
 
-/* Логотип внутри левой кнопки – по центру */
+/* Логотип по центру левой кнопки */
 .mobile-logo {
     position: absolute;
-    /* Centre inside the visible trapezoid, not its rectangular SVG box. */
     top: 48%;
     left: 43%;
     transform: translate(-50%, -50%);
@@ -1361,10 +1348,9 @@ button { font: inherit; }
     object-fit: contain;
 }
 
-/* Иконка Telegram внутри правой кнопки – по центру */
+/* Иконка Telegram по центру правой кнопки */
 .mobile-tg-icon {
     position: absolute;
-    /* The right button is asymmetric in the opposite direction. */
     top: 52%;
     left: 58%;
     transform: translate(-50%, -50%);
@@ -1374,14 +1360,12 @@ button { font: inherit; }
     object-fit: contain;
 }
 
-/* ===== АКТИВАЦИЯ НА МОБИЛЬНЫХ (≤768px) ===== */
+/* Активация мобильной шапки при ≤768px */
 @media (max-width: 768px) {
-    /* Старую шапку полностью скрываем */
     .site-header {
         display: none !important;
     }
 
-    /* Показываем новую мобильную шапку */
     .mobile-header {
         display: flex !important;
     }
@@ -1389,10 +1373,7 @@ button { font: inherit; }
 
 
 
-/* ============================================================
-   МОБИЛЬНАЯ КОМПОЗИЦИЯ: hero, about и player
-   ============================================================ */
-
+/* Мобильная композиция hero, about и player */
 .about-mobile-toggle,
 .visually-hidden {
     display: none;
@@ -1409,7 +1390,7 @@ button { font: inherit; }
         background: var(--paper);
     }
 
-    /* Both hero columns occupy the same canvas: the video collage never drops below the text. */
+    /* Колонки hero наложены друг на друга, коллаж под текстом */
     .hero-left {
         position: relative;
         z-index: 10;
@@ -1654,17 +1635,16 @@ button { font: inherit; }
     .faq-list summary { padding-right: 8px; padding-left: 8px; }
 }
 
-/* Fine-tuning from the mobile layout reference. */
+/* Уточнения мобильного макета */
 @media (max-width: 768px) {
-    /* Scale the desktop canvas down so its geometric texture is visible on phones. */
+    /* Масштабирование десктопного фона для телефонов */
     body {
         background-size: 480px auto;
         background-repeat: repeat-y;
         background-position: top center;
     }
 
-    /* The mobile title is a separate, compact asset. Its left edge sits slightly
-       beyond the copy, while the copy itself retains the reference alignment. */
+    /* Мобильный заголовок выходит за текст, выравнивание сохранено */
     .hero {
         height: clamp(800px, 184vw, 900px);
         background: transparent;
@@ -1699,7 +1679,7 @@ button { font: inherit; }
         margin-top: 0;
     }
 
-    /* Enlarged collage deliberately continues beyond the hero bounds. */
+    /* Коллаж увеличен и выходит за границы hero */
     .hero-videos {
         transform: translate(-14%, -4%) scale(.62);
     }
@@ -1730,7 +1710,7 @@ button { font: inherit; }
         background: linear-gradient(180deg, rgba(238, 238, 238, 0), #EDEDED 78%);
     }
 
-    /* Hero: triangle 1 stays intact; only the two lower pieces move. */
+    /* Hero: треугольник 1 статичен, два нижних анимированы */
     .glass-triangle-hero-2,
     .glass-triangle-hero-3 {
         display: block !important;
@@ -1751,7 +1731,7 @@ button { font: inherit; }
     .glass-triangle-hero-2 { animation: mobile-hero-float-2 25.5s ease-in-out infinite !important; }
     .glass-triangle-hero-3 { animation: mobile-hero-float-3 25.5s ease-in-out infinite !important; }
 
-    /* Softly melt the collage into the white top edge of the mobile page. */
+    /* Градиентное затемнение для плавного перехода коллажа к верху страницы */
     .hero::before {
         content: '';
         position: absolute;
@@ -1778,7 +1758,7 @@ button { font: inherit; }
         appearance: none;
     }
 
-    /* About: the five glass triangles are positioned from the mobile reference. */
+    /* Пять треугольников About позиционированы по мобильному макету */
     .glass-triangles-container {
         inset: 0;
         width: 100%;
@@ -1804,7 +1784,7 @@ button { font: inherit; }
     .glass-triangle-about-4 { animation: mobile-about-float-4 25.5s ease-in-out infinite !important; }
     .glass-triangle-about-5 { animation: mobile-about-float-5 25.5s ease-in-out infinite !important; }
 
-    /* Player keyframes used to override the mobile scale, leaving these too large. */
+    /* Анимации треугольников плеера на мобильных */
     .glass-triangle-player {
         display: block !important;
         transform-origin: top left;
@@ -1871,7 +1851,7 @@ button { font: inherit; }
         width: 100%;
         height: auto;
     }
-    /* Data section triangles: values are from the 360px-wide mobile Figma frame. */
+    /* Треугольники Data с координатами из мобильного макета 360px */
     .data-mobile-triangle,
     .data-mobile-glass {
         position: absolute;
@@ -2034,7 +2014,6 @@ button { font: inherit; }
         align-items: center;
         text-align: center;
         background: transparent;
-        /* The mobile SVG already has its sloped silhouette baked in. */
         transform: translateX(-50%);
         transform-origin: center;
         clip-path: none;
@@ -2193,7 +2172,6 @@ button { font: inherit; }
 }
 
 @media (min-width: 420px) and (max-width: 768px) {
-    /* Wide phones need more vertical breathing room between copy and CTA. */
     .hero { height: 860px; }
     .footer-content { bottom: 16%; }
 }
