@@ -1,0 +1,2199 @@
+/* Base */
+:root {
+    --ink: #17191d;
+    --paper: #eeeeee;
+    --muted: #cdd3db;
+    --line: rgba(23, 25, 29, .18);
+    --display: "Tektur", "Arial Narrow", sans-serif;
+    --body: "Nunito Sans", Arial, sans-serif;
+}
+
+/* Tektur fonts */
+@font-face {
+    font-family: 'Tektur';
+    src: url('./fonts/Tektur-Regular.woff2') format('woff2'),
+        url('./fonts/Tektur-Regular.woff') format('woff'),
+        url('./fonts/Tektur-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Tektur';
+    src: url('./fonts/Tektur-Bold.woff2') format('woff2'),
+        url('./fonts/Tektur-Bold.woff') format('woff'),
+        url('./fonts/Tektur-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Tektur';
+    src: url('./fonts/static/Tektur-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    overflow-x: clip;
+    background: url('mat/main background.png') no-repeat top center;
+    background-size: auto 100%;
+    background-color: var(--paper);
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+.mobile-only { display: none; }
+
+@media (min-width: 769px) {
+    .faq-list summary { padding-right: 8px; padding-left: 8px; }
+}
+
+/* Masks (hidden) */
+.mask-svg {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+}
+
+/* Glass triangles */
+.glass-triangle,
+.glass-triangle-hero,
+.glass-triangle-player,
+.glass-triangle-data,
+.glass-triangle-purchase,
+.glass-triangle-footer {
+    position: absolute;
+    background: rgba(200, 205, 212, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(0px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    will-change: transform;
+    pointer-events: none;
+    animation-duration: 15.5s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    z-index: 151;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, backdrop-filter;
+}
+@media (prefers-reduced-motion: reduce) {
+    .glass-triangle,
+    .glass-triangle-hero,
+    .glass-triangle-player,
+    .glass-triangle-data,
+    .glass-triangle-purchase,
+    .glass-triangle-footer {
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        will-change: transform, backdrop-filter;
+        animation: none;
+    }
+}
+
+/* About triangles */
+.glass-triangles-container {
+    position: absolute;
+    top: 150px;
+    left: 300px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 200;
+}
+.about {
+    position: relative;
+    height: 1080px;
+    min-height: 1080px;
+    margin-top: -400px;
+    z-index: 10;
+    overflow: visible;
+    background: transparent;
+    isolation: isolate;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.glass-triangle-about-1 {
+    left: 1050px;
+    top: 800px;
+    width: 212px;
+    height: 137.5px;
+    clip-path: polygon(68.88% 0%, 100% 65.18%, 0% 28.99%);
+    animation-name: about-sway-1;
+    transform: rotate(-138.72deg);
+}
+.glass-triangle-about-2 {
+    left: -230px;
+    top: 450px;
+    width: 142.1px;
+    height: 67.24px;
+    clip-path: polygon(71.77% 80.03%, 0% 100%, 100% 0%);
+    animation-name: about-sway-2;
+    animation-delay: -3.2s;
+    transform: rotate(-63.65deg);
+}
+.glass-triangle-about-3 {
+    left: -200px;
+    top: 100px;
+    width: 154.89px;
+    height: 100.46px;
+    clip-path: polygon(0% 49.62%, 23.97% 100%, 60% 0%);
+    animation-name: about-sway-3;
+    animation-delay: -6.1s;
+    transform: matrix(-0.11, -0.99, -0.99, 0.11, 0, 0);
+}
+.glass-triangle-about-4 {
+    left: 1250px;
+    top: 315px;
+    width: 212px;
+    height: 137.5px;
+    clip-path: polygon(54.25% 100%, 0% 86.73%, 100% 0%);
+    animation-name: about-sway-4;
+    animation-delay: -2.5s;
+}
+.glass-triangle-about-5 {
+    left: -170px;
+    top: 530px;
+    width: 229.5px;
+    height: 221px;
+    clip-path: polygon(0% 100%, 13.07% 26.92%, 100% 0%);
+    animation-name: about-sway-5;
+    animation-delay: -4.8s;
+}
+
+/* Исправленные анимации с rotate */
+@keyframes about-sway-1 {
+    0% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(1) translate(2px, -38px) rotate(1deg);}
+    100% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
+}
+@keyframes about-sway-2 {
+    0% { transform: scale(1.3) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(1.3) translate(-2px, 36px) rotate(1deg);}
+    100% { transform: scale(1.3) translate(0px, 0px) rotate(0deg); }
+}
+@keyframes about-sway-3 {
+    0% { transform: scale(1.5) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(1.5) translate(3px, -34px) rotate(1deg);}
+    100% { transform: scale(1.5) translate(0px, 0px) rotate(0deg); }
+}
+@keyframes about-sway-4 {
+    0% { transform: scale(1.2) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(1.2) translate(-3px, 32px) rotate(1deg);}
+    100% { transform: scale(1.2) translate(0px, 0px) rotate(0deg); }
+}
+@keyframes about-sway-5 {
+    0% { transform: scale(1.2) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(1.2) translate(4px, -30px) rotate(1deg);}
+    100% { transform: scale(1.2) translate(0px, 0px) rotate(0deg); }
+}
+
+/* Hero glass triangles */
+.glass-container {
+    position: absolute;
+    left: 117px;
+    top: 0;
+    width: 566px;
+    height: 520px;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 5;
+}
+.glass-triangle-hero-1 {
+    left: 125px;
+    top: 0;
+    width: 234px;
+    height: 256px;
+    clip-path: url(#mask-triangle-1);
+    animation-name: glass-sway-1;
+}
+.glass-triangle-hero-2 {
+    left: 0;
+    top: 300px;
+    width: 201px;
+    height: 126px;
+    clip-path: url(#mask-triangle-2);
+    animation-name: glass-sway-2;
+    animation-delay: -3.2s;
+}
+.glass-triangle-hero-3 {
+    left: 329px;
+    top: 444px;
+    width: 237px;
+    height: 55px;
+    clip-path: url(#mask-triangle-3);
+    animation-name: glass-sway-3;
+    animation-delay: -6.1s;
+}
+
+@keyframes glass-sway-1 {
+    0% { transform: scale(0.75) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(0.75) translate(1px, -35px) rotate(1deg);}
+    100% { transform: scale(0.75) translate(0px, 0px) rotate(0deg); }
+}
+@keyframes glass-sway-2 {
+    0% { transform: scale(0.75) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(0.75) translate(-1px, 32px) rotate(-0.8deg);}
+    100% { transform: scale(0.75) translate(0px, 0px) rotate(0deg); }
+}
+@keyframes glass-sway-3 {
+    0% { transform: scale(0.75) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(0.75) translate(2px, 30px) rotate(0.5deg);}
+    100% { transform: scale(0.75) translate(0px, 0px) rotate(0deg); }
+}
+
+/* Player glass triangles */
+.glass-triangle-player-1 {
+    left: 12%;
+    top: 3%;
+    width: 318px;
+    height: 112px;
+    clip-path: url(#mask-player-1);
+    animation-name: player-float-1;
+    animation-delay: 0s;
+}
+.glass-triangle-player-2 {
+    right: 0;
+    bottom: 10%;
+    width: 149px;
+    height: 116px;
+    clip-path: url(#mask-player-2);
+    animation-name: player-float-2;
+    animation-delay: -2.5s;
+}
+
+@keyframes player-float-1 {
+    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+    50% {transform: translate(3px, -34px) scale(1.02) rotate(1deg);}
+    100% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+}
+@keyframes player-float-2 {
+    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+    50% {transform: translate(-2px, 32px) scale(1.02) rotate(1deg);}
+    100% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+}
+
+/* Data glass triangles */
+.data-image-section {
+    position: relative;
+    background: transparent;
+    padding: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.data-mobile-triangle,
+.data-mobile-glass { display: none; }
+.glass-triangle-data-1 {
+    left: 15%;
+    bottom: 5%;
+    width: 230px;
+    height: 221px;
+    clip-path: url(#mask-about-5);
+    animation-name: data-float-1;
+}
+.glass-triangle-data-2 {
+    right: 35%;
+    top: 15%;
+    width: 286px;
+    height: 216px;
+    clip-path: url(#mask-data-2);
+    animation-name: data-float-2;
+    animation-delay: -2.5s;
+}
+
+@keyframes data-float-1 {
+    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+    50% {transform: translate(0px, -30px) scale(1) rotate(1deg);}
+    100% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+}
+@keyframes data-float-2 {
+    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+    50% {transform: translate(-3px, 32px) scale(1.02) rotate(1deg);}
+    100% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+}
+@keyframes mobile-data-float-1 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% {transform: translate3d(0, -30px, 0) scale(1) rotate(
+1deg);}
+}
+@keyframes mobile-data-float-2 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% {transform: translate3d(-3px, 30px, 0) scale(1) rotate(
+1deg);}
+}
+@keyframes footer-mobile-float {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% {transform: translate3d(3px, -20px, 0) scale(1) rotate(
+4deg);}
+}
+@keyframes mobile-hero-float-2 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate3d(-2px, 30px, 0) scale(1) rotate(0deg); }
+}
+@keyframes mobile-hero-float-3 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate3d(3px, 34px, 0) scale(1) rotate(0deg); }
+}
+@keyframes mobile-about-float-1 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate3d(2px, -28px, 0) scale(1) rotate(0deg); }
+}
+@keyframes mobile-about-float-2 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate3d(-2px, 26px, 0) scale(1) rotate(0deg); }
+}
+@keyframes mobile-about-float-3 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate3d(3px, -30px, 0) scale(1) rotate(0deg); }
+}
+@keyframes mobile-about-float-4 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate3d(-3px, 28px, 0) scale(1) rotate(0deg); }
+}
+@keyframes mobile-about-float-5 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate3d(4px, -24px, 0) scale(1) rotate(0deg); }
+}
+@keyframes mobile-player-float-1 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% {transform: translate3d(3px, 5px, 0) scale(1) rotate(10deg);}
+}
+@keyframes mobile-player-float-2 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    50% {transform: translate3d(-2px, -8px, 0) scale(1) rotate(
+7deg);}
+}
+@keyframes mobile-paid-float-108 {
+    0%, 100% { translate: 0 0; scale: 1; rotate: 0deg; }
+    50% {translate: 2px -26px;scale: 1;rotate: 1deg;}
+}
+@keyframes mobile-paid-float-23 {
+    0%, 100% { translate: 0 0; scale: 1; rotate: 0deg; }
+    50% {translate: -3px 24px;scale: 1;rotate: 1deg;}
+}
+@keyframes mobile-paid-float-102 {
+    0%, 100% { translate: 0 0; scale: 1; rotate: 0deg; }
+    50% {translate: 3px -24px;scale: 1;rotate: 1deg;}
+}
+
+/* ===== ИСПРАВЛЕННАЯ СЕКЦИЯ PURCHASE ===== */
+.purchase {
+    position: relative;
+    background: transparent;
+    padding: 0;
+}
+
+.purchase-inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 1;
+}
+
+.purchase-bg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.purchase-button {
+    position: absolute;
+    right: 22%;
+    top: 70%;
+    transform: translateY(-50%) rotate(-6.09deg);
+    width: clamp(180px, 18vw, 326px);
+    height: clamp(36px, 3.5vw, 53px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1em;
+    background: #212226;
+    clip-path: polygon(11.1% 0%, 100% 0%, 88.9% 100%, 0% 100%);
+    font-family: 'Tektur', sans-serif !important;
+    font-size: clamp(16px, 1.6vw, 24px);
+    line-height: 1.2;
+    color: #FFFFFF;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background 0.2s, transform 0.2s;
+    z-index: 10;
+    white-space: nowrap;
+}
+
+.purchase-button:hover {
+    background: #333;
+    transform: translateY(-50%) rotate(-6.09deg) scale(1.02);
+}
+.purchase-button-shape { display: none; }
+.paid-mobile-triangle { display: none; }
+
+.glass-triangle-purchase-1 {
+    right: 19%;
+    top: 15%;
+    transform: translateY(-50%);
+    width: 190px;
+    height: 145px;
+    clip-path: url(#mask-purchase-1);
+    animation-name: purchase-float-1;
+}
+.glass-triangle-purchase-2 {
+    left: 13%;
+    top: 45%;
+    transform: translateY(-50%);
+    width: 424px;
+    height: 149px;
+    clip-path: url(#mask-purchase-2);
+    animation-name: purchase-float-2;
+    animation-delay: -3s;
+}
+
+@keyframes purchase-float-1 {
+    0% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(1) translate(1px, -35px) rotate(1deg);}
+    100% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
+}
+@keyframes purchase-float-2 {
+    0% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
+    50% {transform: scale(1) translate(4px, 38px) rotate(1deg);}
+    100% { transform: scale(1) translate(0px, 0px) rotate(0deg); }
+}
+
+/* ===== МОБИЛЬНАЯ ПОКУПКА ===== */
+@media (max-width: 768px) {
+    .purchase-inner {
+        aspect-ratio: auto;
+        height: auto;
+    }
+    .purchase-bg {
+        height: auto;
+        width: 100%;
+    }
+    .purchase-button {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin: -10% auto 0;
+        width: 90%;
+        max-width: 326px;
+        clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+        font-size: clamp(18px, 4vw, 24px);
+        white-space: normal;
+    }
+    .purchase-button:hover {
+        transform: scale(1.02);
+    }
+}
+
+/* Остальные стили (Header, Hero, About, Player, Program, FAQ, Footer) без изменений */
+/* Header */
+.site-header {
+    position: absolute;
+    top: 20px;
+    left: 60px;
+    right: 31px;
+    z-index: 130;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 68px;
+}
+.logo {
+    width: 68px;
+    height: 68px;
+    flex: none;
+    transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  
+
+}
+.logo img {
+    display: block;
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+}
+.nav-bar {
+    background: #EDEDED;
+    height: 40px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 613px;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+.edition {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 43px 11px 63px;
+    height: 50px;
+    background: #212226;
+    color: #FFFFFF;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+    white-space: nowrap;
+    flex: none;
+    width: 216px;
+    box-sizing: border-box;
+    margin: -5px 0;
+    transform: skewX(7deg);
+    clip-path: polygon(0% 0%, 92% 0%, 100% 100%, 8% 100%);
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.edition span {
+    display: inline-block;
+    transform: skewX(-7deg);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 37px;
+    flex: 1;
+    height: 100%;
+    padding-right: 0;
+}
+
+.site-header nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 53px;
+    padding: 0 26px;
+    height: 19px;
+    flex: none;
+}
+.site-header nav a {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+    color: #212226;
+    text-decoration: none;
+}
+.site-header nav a:hover { opacity: 0.5; }
+
+/* Telegram button */
+.telegram-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 171px;
+    height: 50px;
+    flex: none;
+    color: #EDEDED;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    margin-right: -27px;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s ease;
+}
+.telegram-button:focus,
+.telegram-button:focus-visible,
+.telegram-button:active {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #212226 !important;
+    opacity: 0.8;
+}
+.telegram-button .btn-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+.telegram-button .btn-icon {
+    position: relative;
+    z-index: 1;
+    width: 20px;
+    height: 20px;
+    flex: none;
+    display: block;
+}
+.telegram-button .btn-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.telegram-button span {
+    position: relative;
+    z-index: 1;
+}
+.telegram-button:hover { opacity: 1; transform: scale(1.05); }
+
+
+/* Hero layout */
+.hero {
+    display: flex;
+    align-items: stretch;
+    min-height: calc(100vh - 68px);
+    background: linear-gradient(to bottom, var(--paper) 60%, transparent 100%);
+    position: relative;
+    padding: 0;
+    z-index: 30;
+}
+.hero-left {
+    position: relative;
+    flex: 0 0 683px;
+    height: 662px;
+    margin-top: 44px;
+    background: transparent;
+}
+.hero-content {
+    position: absolute;
+    top: 44px;
+    left: 30px;
+    width: 584px;
+    height: 618px;
+}
+.hero-title-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 584px;
+    height: 309px;
+    display: block;
+}
+.hero-text-block {
+    position: absolute;
+    top: 319px;
+    left: 179px;
+    width: 375px;
+    height: 188px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+.hero-headline {
+    margin: 0;
+    font-family: 'Tektur', sans-serif;
+    font-weight: 600;
+    font-size: 50px;
+    line-height: 51px;
+    color: #212226;
+    text-shadow: 3px 0px 0px #AEB0BB;
+    letter-spacing: -0.02em;
+}
+.hero-headline br { display: block; }
+.hero-description {
+    margin: 0;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 125%;
+    color: #212226;
+    max-width: 375px;
+}
+.hero-button {
+    position: absolute;
+    top: 565px;
+    left: 184px;
+    width: 329px;
+    height: 53px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.25s ease;
+    cursor: pointer;
+}
+.hero-button:hover { transform: scale(1.06); }
+.hero-button svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.hero-button-text {
+    position: relative;
+    z-index: 2;
+    font-family: 'Tektur', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 31px;
+    color: #FFFFFF;
+    text-align: center;
+    pointer-events: none;
+}
+
+.hero-right {
+    flex: 1;
+    position: relative;
+    min-height: 1462px;
+    height: 1462px;
+    background: transparent;
+    overflow: visible !important;
+    z-index: 40;
+}
+.hero-videos {
+    position: absolute;
+    inset: 0;
+    overflow: visible !important;
+    z-index: 45;
+}
+.hero-videos .tri-video {
+    position: absolute;
+    overflow: visible !important;
+    cursor: pointer;
+    z-index: 50;
+    pointer-events: auto !important;
+}
+.hero-videos .tri-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    background: #ccc;
+}
+.hero-videos .tri-video:hover video {
+    filter: brightness(1.1);
+    transition: filter 0.2s;
+}
+
+.gradient-overlay {
+    position: absolute;
+    left: 862.464px;
+    top: 627.269px;
+    width: 1342.39px;
+    height: 176.115px;
+    transform: rotate(0.4695rad);
+    transform-origin: top left;
+    background: linear-gradient(180deg, rgba(237, 237, 237, 0) 0%, #EDEDED 100%);
+    pointer-events: none !important;
+    z-index: 60 !important;
+}
+.gradient-overlay-2 {
+    position: absolute;
+    left: 848.110px;
+    top: 795.159px;
+    width: 1318.48px;
+    height: 78.857px;
+    transform: rotate(0.4695rad);
+    transform-origin: top left;
+    background: #EDEDED;
+    pointer-events: none !important;
+    z-index: 60 !important;
+}
+
+.section {
+    position: relative;
+    background: transparent;
+}
+
+.about-orbit-svg {
+    position: absolute;
+    width: 823.87px;
+    height: 823.87px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 100 !important;
+    opacity: 1;
+}
+.about-center {
+    position: relative;
+    z-index: 20;
+    width: 400px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: #EDEDED;
+    padding: 20px;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    justify-content: center;
+    align-items: center;
+}
+.about-center .about-title {
+    margin: 0;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 33px;
+    color: #212226;
+}
+.about-center .about-desc {
+    margin: 0;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 33px;
+    color: #212226;
+}
+
+/* Benefit icons */
+.benefit {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 150 !important;
+    width: auto;
+    height: auto;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: transform 0.15s ease-out;
+}
+.benefit .slot-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 192.22px;
+    height: 192.22px;
+    background: none;
+    border: none;
+}
+.benefit .slot-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+.benefit--one { left: 10.56%; top: 174px; }
+.benefit--two { left: 10.57%; top: 771px; }
+.benefit--three { left: 75.28%; top: 176px; }
+.benefit--four { left: 83.12%; top: 523px; }
+.benefit--five { left: 4.24%; top: 457px; }
+.benefit--six { left: 69.39%; top: 811px; }
+.benefit b,
+.benefit strong { display: none; }
+
+/* Player section */
+.player-section {
+    position: relative;
+    width: 100%;
+    min-height: 680px;
+    height: 50vw;
+    background: #17191d;
+    overflow: hidden;
+    transform: translateZ(0);
+    contain: layout style paint;
+}
+.player-section video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #17191d;
+    cursor: pointer;
+}
+.player-decor {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    object-fit: cover;
+    z-index: 5;
+}
+.player-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    transition: transform 0.2s ease, opacity 0.5s ease;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+}
+.player-btn:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+.player-btn-pause {
+    width: 332px;
+    height: 264px;
+}
+.player-btn-play {
+    width: 172px;
+    height: 174px;
+}
+.player-btn svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+.player-btn.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Program */
+
+.program-intro { display: none; }
+.program-shell {
+    --program-travel: 0px;
+    height: calc(100vh + var(--program-travel));
+    position: relative;
+    background: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.program-sticky {
+    min-height: 100vh;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    cursor: grab;
+}
+.program-sticky:active { cursor: grabbing; }
+.program-viewport {
+    width: 100%;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    padding-left: clamp(24px, 6.5vw, 94px);
+    padding-right: 0;
+    pointer-events: none;
+}
+.lesson-track {
+    display: flex;
+    gap: clamp(34px, 4.8vw, 80px);
+    width: max-content;
+    will-change: transform;
+    align-items: center;
+    pointer-events: auto;
+    touch-action: none;
+}
+.lesson-track picture { display: block; }
+.lesson-track img {
+    display: block;
+    height: auto;
+    max-height: 80vh;
+    width: auto;
+    max-width: none;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* FAQ */
+.faq-new {
+    width: 100%;
+    background: var(--paper);
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background: transparent;
+}
+.faq-container {
+    width: 100%;
+    max-width: 1920px;
+    padding: 89px 375px 80px 350px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: transparent;
+}
+.faq-container h2 {
+    margin: 0;
+    font-family: 'Tektur', sans-serif;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 52px;
+    color: #212226;
+    text-shadow: 3px 0px 0px #AEB0BB;
+    flex: none;
+    align-self: stretch;
+}
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+}
+.faq-list details {
+    position: relative;
+    width: 913px;
+    max-width: 100%;
+    border-bottom: 2px solid #C7CCD3;
+    padding: 0;
+    box-sizing: border-box;
+}
+.faq-list summary {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    list-style: none;
+    cursor: pointer;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    color: #212226;
+    box-sizing: border-box;
+    width: 100%;
+    z-index: 0;
+}
+.faq-list summary::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background: #e0e4ea url(mat/FAQ-background.svg) center / cover no-repeat;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+.faq-list summary:hover::before { opacity: 1; }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary span { flex: none; }
+.faq-list summary svg {
+    width: 21.85px;
+    height: 15px;
+    flex: none;
+    transition: transform 0.3s ease;
+    transform: rotate(0deg);
+}
+.faq-list details[open] summary svg { transform: rotate(180deg); }
+.faq-list details summary svg path { transition: fill 0.3s ease; }
+.faq-list details summary:hover svg path { fill: #2E3035; }
+.faq-list details p {
+    margin: 0 0 13px 0;
+    padding: 0;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #515966;
+    width: 100%;
+    text-align: left;
+}
+
+/* Footer */
+.footer-new {
+    position: relative;
+    width: 100%;
+    margin-top: 120px;
+    background: transparent;
+}
+.footer-bg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.footer-content {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 729px;
+    height: 158px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 0;
+    gap: 180px;
+    z-index: 10;
+}
+.footer-link-left,
+.footer-link-right {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    color: #212226;
+    text-decoration: none;
+    flex: none;
+}
+.footer-link-left { width: 61px; order: 0; }
+.footer-link-right { width: 102px; order: 2; }
+.footer-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    gap: 24px;
+    width: 206px;
+    flex: none;
+    order: 1;
+}
+.footer-logo {
+    width: 111px;
+    height: 107px;
+    display: block;
+    flex: none;
+    order: 0;
+}
+.footer-title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    color: #212226;
+    text-align: center;
+    width: 206px;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+}
+
+/* В промежутке 769–1400px используется исходный десктопный макет. */
+@media (max-width: 600px) {
+    .site-header { left: 16px; right: 16px; top: 10px; gap: 8px; height: 56px; }
+    .logo { width: 48px; height: 48px; }
+    .logo img { width: 48px; height: 48px; }
+    .nav-bar { height: 32px; gap: 8px; }
+    .edition {
+        font-size: 10px;
+        padding: 4px 10px;
+        height: 36px;
+        transform: skewX(-4deg);
+        padding-left: 14px;
+        padding-right: 14px;
+        margin: -3px 0;
+    }
+    .edition span { transform: skewX(4deg); }
+    .nav-right { gap: 6px; }
+    .telegram-button {
+        width: 100px;
+        height: 36px;
+        font-size: 10px;
+        gap: 4px;
+        margin-right: -5px;
+    }
+    .telegram-button .btn-icon { width: 14px; height: 14px; }
+    .hero-left { min-height: 380px; margin-top: 60px; }
+    .hero-headline { font-size: 24px; }
+    .hero-description { font-size: 14px; }
+    .hero-button { max-width: 260px; height: 44px; }
+    .hero-button-text { font-size: 18px; line-height: 24px; }
+    .hero-right { min-height: 250px; height: 250px; }
+    .about-center { width: 240px; padding: 16px; }
+    .about-center .about-title { font-size: 18px; line-height: 24px; }
+    .about-center .about-desc { font-size: 16px; line-height: 22px; }
+    .about .benefit .slot-icon { width: 56px; height: 56px; }
+    .about-orbit-svg { width: 400px; height: 400px; }
+    .faq-container { padding: 40px 16px 40px 16px; }
+    .faq-container h2 { font-size: 28px; line-height: 36px; }
+    .faq-list summary { font-size: 14px; padding: 10px 0; }
+    .faq-list summary svg { width: 16px; height: 12px; }
+    .faq-list details p { font-size: 13px; }
+    .purchase-button { font-size: 18px; height: 44px; padding: 8px 20px; width: 90%; max-width: 280px; }
+    .footer-content { top: 40px; gap: 12px; }
+    .footer-logo { width: 72px; height: 70px; }
+    .footer-title { font-size: 16px; line-height: 22px; }
+    .footer-link-left,
+    .footer-link-right { font-size: 16px; line-height: 22px; }
+    .glass-triangle-hero-1,
+    .glass-triangle-hero-2,
+    .glass-triangle-hero-3 { display: none; }
+    .glass-triangle-about-1,
+    .glass-triangle-about-2,
+    .glass-triangle-about-3,
+    .glass-triangle-about-4,
+    .glass-triangle-about-5 { display: none; }
+    .glass-triangle { display: none; }
+    .player-btn-pause { width: 100px; height: 80px; }
+    .player-btn-play { width: 68px; height: 68px; }
+    .program-viewport { padding-left: 16px; }
+    .lesson-track { gap: 20px; }
+    .lesson-track img { max-height: 60vh; }
+}
+
+/* ============================================================
+   МОБИЛЬНАЯ ВЕРСИЯ HERO — hero-right как фон под hero-left
+   ============================================================ */
+
+/* ============================================================
+   ЗАПРЕТ ГОРИЗОНТАЛЬНОЙ ПРОКРУТКИ НА МОБИЛЬНЫХ (кроме program)
+   ============================================================ */
+
+@media (max-width: 768px) {
+    /* - горизонтальный скролл на всём документе */
+    html,
+    body {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+    }
+
+    /* основные блоки не выходят за пределы экрана */
+    .hero,
+    .about,
+    .player-section,
+    .data-image-section,
+    .faq-new,
+    .purchase,
+    .footer-new {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    /* Контейнер hero-right и его видеообёртка — обрезаем лишнее */
+    .hero-right,
+    .hero-videos {
+        overflow: hidden !important;
+        max-width: 100%;
+    }
+
+    /* Сама секция program — оставить без ограничений,
+       горизонтальное движение реализовано через transform,
+       не через скролл браузера */
+    .program-shell {
+        overflow-x: visible !important;
+        max-width: 100vw;
+    }   
+}
+
+/* ============================================================
+   НОВАЯ МОБИЛЬНАЯ ШАПКА (две кнопки по краям)
+   Добавлено в КОНЕЦ style.css
+   ============================================================ */
+
+/* По умолчанию мобильная шапка скрыта */
+.mobile-header {
+    display: none;
+    position: absolute;
+    top: 12px;
+    left: 0px;
+    right: 0px;
+    z-index: 130;
+    height: 80px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Обе кнопки – относительные контейнеры для SVG и иконок */
+.mobile-header-left,
+.mobile-header-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+/* Фиксируем размеры кнопок согласно макету */
+.mobile-header-left {
+    width: 70px;
+    height: 40px;
+}
+.mobile-header-right {
+    width: 83px;
+    height: 40px;
+}
+
+.mobile-header-left svg,
+.mobile-header-right svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Логотип внутри левой кнопки – по центру */
+.mobile-logo {
+    position: absolute;
+    /* Centre inside the visible trapezoid, not its rectangular SVG box. */
+    top: 48%;
+    left: 43%;
+    transform: translate(-50%, -50%);
+    height: 36px;
+    width: auto;
+    max-width: 54px;
+    object-fit: contain;
+}
+
+/* Иконка Telegram внутри правой кнопки – по центру */
+.mobile-tg-icon {
+    position: absolute;
+    /* The right button is asymmetric in the opposite direction. */
+    top: 52%;
+    left: 58%;
+    transform: translate(-50%, -50%);
+    height: 28px;
+    width: auto;
+    max-width: 36px;
+    object-fit: contain;
+}
+
+/* ===== АКТИВАЦИЯ НА МОБИЛЬНЫХ (≤768px) ===== */
+@media (max-width: 768px) {
+    /* Старую шапку полностью скрываем */
+    .site-header {
+        display: none !important;
+    }
+
+    /* Показываем новую мобильную шапку */
+    .mobile-header {
+        display: flex !important;
+    }
+}
+
+
+
+/* ============================================================
+   МОБИЛЬНАЯ КОМПОЗИЦИЯ: hero, about и player
+   ============================================================ */
+
+.about-mobile-toggle,
+.visually-hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        position: relative;
+        display: block;
+        height: clamp(760px, 184vw, 900px);
+        min-height: 0;
+        padding: 0;
+        overflow: hidden;
+        background: var(--paper);
+    }
+
+    /* Both hero columns occupy the same canvas: the video collage never drops below the text. */
+    .hero-left {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        margin: 0;
+        padding: clamp(210px, 59vw, 360px) 28px 18px;
+        background: transparent;
+        box-sizing: border-box;
+    }
+    .hero-content {
+        position: static;
+        top: auto;
+        left: auto;
+        width: 100%;
+        height: auto;
+        transform: none;
+    }
+    .hero-title-svg {
+        position: relative;
+        display: block;
+        width: min(82%, 370px);
+        height: auto;
+        margin: 0 0 14px;
+    }
+    .hero-text-block {
+        position: relative;
+        top: auto;
+        left: auto;
+        display: block;
+        width: min(88%, 360px);
+        height: auto;
+        margin: 0;
+    }
+    .hero-headline {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 7.1vw, 38px);
+        line-height: 1.08;
+        text-shadow: 2px 0 0 #AEB0BB;
+    }
+    .hero-description {
+        max-width: 340px;
+        margin: 0;
+        font-size: clamp(15px, 4vw, 18px);
+        line-height: 1.35;
+    }
+    .hero-button {
+        position: absolute;
+        top: auto;
+        right: 28px;
+        bottom: 40px;
+        left: 28px;
+        display: flex;
+        width: auto;
+        height: clamp(54px, 14vw, 64px);
+        margin: clamp(44px, 12vw, 82px) 0 0;
+    }
+    .hero-button-text {
+        font-size: clamp(22px, 6vw, 29px);
+        line-height: 1;
+    }
+
+    .hero-right {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+    .hero-videos {
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 1660px;
+        height: 1450px;
+        overflow: visible !important;
+        transform: translate(-4%, -5%) scale(0.42);
+        transform-origin: top left;
+    }
+    .hero-videos .tri-video {
+        pointer-events: none !important;
+    }
+    .gradient-overlay,
+    .gradient-overlay-2 {
+        display: none !important;
+    }
+    .glass-container {
+        display: block !important;
+        left: 0;
+        top: 238px;
+        z-index: 4;
+        transform: scale(0.58);
+        transform-origin: top left;
+    }
+
+    .about {
+        display: block;
+        height: 960px;
+        min-height: 0;
+        margin: 0;
+        overflow: hidden;
+        background: transparent;
+    }
+    .about-orbit-svg {
+        top: 38%;
+        left: 50%;
+        width: min(128vw, 620px);
+        height: auto;
+        z-index: 10 !important;
+        transition: opacity 280ms ease, transform 280ms ease;
+    }
+    .about-center {
+        position: absolute;
+        top: 38%;
+        left: 50%;
+        z-index: 20;
+        width: min(66vw, 320px);
+        min-height: 320px;
+        padding: 14px;
+        background: transparent;
+        border-radius: 0;
+        aspect-ratio: auto;
+        transform: translate(-50%, -50%);
+        transition: opacity 220ms ease, transform 280ms ease;
+    }
+    .about-center .about-title,
+    .about-center .about-desc {
+        font-size: clamp(4px, 3.6vw, 14px);
+        line-height: 1.38;
+    }
+    .about-mobile-toggle {
+        position: absolute;
+        top: 38%;
+        left: 50%;
+        z-index: 30;
+        display: block;
+        width: min(78vw, 390px);
+        height: min(78vw, 390px);
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+    }
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+    .about .benefit {
+        position: absolute;
+        z-index: 25 !important;
+        display: flex;
+        margin: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 220ms ease, transform 320ms ease;
+    }
+    .about .benefit .slot-icon {
+        width: clamp(88px, 25vw, 124px);
+        height: clamp(88px, 25vw, 124px);
+    }
+    .about .benefit--one { left: 50%; top: 18%; transform: translate(-50%, -50%) scale(.7); }
+    .about .benefit--two { left: 28%; top: 59%; transform: translate(-50%, -50%) scale(.7); }
+    .about .benefit--three { left: 79%; top: 29%; transform: translate(-50%, -50%) scale(.7); }
+    .about .benefit--four { left: 76%; top: 51%; transform: translate(-50%, -50%) scale(.7); }
+    .about .benefit--five { left: 22%; top: 36%; transform: translate(-50%, -50%) scale(.7); }
+    .about .benefit--six { left: 58%; top: 74%; transform: translate(-50%, -50%) scale(.7); }
+    .about--icons-visible .about-orbit-svg,
+    .about--icons-visible .about-center {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .about--icons-visible .about-mobile-toggle {
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: 0;
+        transform: none;
+    }
+    .about--icons-visible .benefit {
+        opacity: 1;
+        animation: mobile-icon-float 4.5s ease-in-out infinite;
+    }
+    .about--icons-visible .benefit--two { animation-delay: -.8s; }
+    .about--icons-visible .benefit--three { animation-delay: -1.6s; }
+    .about--icons-visible .benefit--four { animation-delay: -2.4s; }
+    .about--icons-visible .benefit--five { animation-delay: -3.2s; }
+    .about--icons-visible .benefit--six { animation-delay: -4s; }
+
+    .player-section {
+        min-height: 260px;
+        height: 56.25vw;
+        max-height: 430px;
+    }
+    .player-btn-pause {
+        width: min(42vw, 190px);
+        height: min(33vw, 150px);
+    }
+    .player-btn-play {
+        width: min(24vw, 110px);
+        height: min(24vw, 110px);
+    }
+    .glass-triangle-player {
+        display: block !important;
+        transform: scale(.6);
+        transform-origin: center;
+    }
+    .glass-triangle-about,
+    .glass-triangle-data,
+    .glass-triangle-purchase,
+    .glass-triangle-footer {
+        display: none !important;
+    }
+}
+
+@keyframes mobile-icon-float {
+    0%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0); }
+    50% { transform: translate(-50%, -50%) translate3d(0, -8px, 0); }
+}
+
+@media (max-width: 480px) {
+    .hero-left { padding-left: 22px; padding-right: 22px; }
+    .hero-title-svg { width: min(84%, 350px); }
+    .hero-text-block { width: 92%; }
+    .about { height: 890px; }
+    .about-center { min-height: 280px; }
+}
+
+@media (min-width: 769px) {
+    .faq-list summary { padding-right: 8px; padding-left: 8px; }
+}
+
+/* Fine-tuning from the mobile layout reference. */
+@media (max-width: 768px) {
+    /* Scale the desktop canvas down so its geometric texture is visible on phones. */
+    body {
+        background-size: 480px auto;
+        background-repeat: repeat-y;
+        background-position: top center;
+    }
+
+    /* The mobile title is a separate, compact asset. Its left edge sits slightly
+       beyond the copy, while the copy itself retains the reference alignment. */
+    .hero {
+        height: clamp(800px, 184vw, 900px);
+        background: transparent;
+    }
+    .hero-left {
+        padding-top: clamp(252px, 70vw, 360px);
+    }
+    .hero-title-picture {
+        position: relative;
+        display: block;
+    }
+    .hero-title-svg {
+        width: min(82%, 330px);
+        margin-left: 7px;
+    }
+    .hero-text-block {
+        width: calc(100% - 52px);
+        max-width: 380px;
+        margin-left: 28px;
+    }
+    .hero-description {
+        max-width: 100%;
+        font-size: 16px;
+        line-height: 1.28;
+    }
+    .hero-headline {
+        line-height: 1.03;
+    }
+    .hero-button {
+        width: auto;
+        max-width: none;
+        margin-top: 0;
+    }
+
+    /* Enlarged collage deliberately continues beyond the hero bounds. */
+    .hero-videos {
+        transform: translate(-14%, -4%) scale(.62);
+    }
+    .gradient-overlay,
+    .gradient-overlay-2 {
+        display: block !important;
+        position: absolute;
+        z-index: 3 !important;
+        pointer-events: none;
+    }
+    .gradient-overlay {
+        top: 8%;
+        left: 4%;
+        width: 145%;
+        height: 58%;
+        transform: rotate(25deg);
+        transform-origin: top left;
+        background: linear-gradient(180deg, rgba(238, 238, 238, 0) 4%, rgba(238, 238, 238, .22) 32%, #EDEDED 88%);
+    }
+    .gradient-overlay-2 {
+        top: auto;
+        right: auto;
+        bottom: 13%;
+        left: -16%;
+        width: 132%;
+        height: 35%;
+        transform: none;
+        background: linear-gradient(180deg, rgba(238, 238, 238, 0), #EDEDED 78%);
+    }
+
+    /* Hero: triangle 1 stays intact; only the two lower pieces move. */
+    .glass-triangle-hero-2,
+    .glass-triangle-hero-3 {
+        display: block !important;
+        transform-origin: top left;
+    }
+    .glass-triangle-hero-2 {
+        left: 8px;
+        top: 450px;
+        width: 330px;
+        height: 205px;
+    }
+    .glass-triangle-hero-3 {
+        left: 451px;
+        top: 888px;
+        width: 386px;
+        height: 90px;
+    }
+    .glass-triangle-hero-2 { animation: mobile-hero-float-2 25.5s ease-in-out infinite !important; }
+    .glass-triangle-hero-3 { animation: mobile-hero-float-3 25.5s ease-in-out infinite !important; }
+
+    /* Softly melt the collage into the white top edge of the mobile page. */
+    .hero::before {
+        content: '';
+        position: absolute;
+        z-index: 5;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 116px;
+        pointer-events: none;
+        background: linear-gradient(180deg, rgba(238, 238, 238, .98) 0%, rgba(238, 238, 238, .7) 38%, rgba(238, 238, 238, 0) 100%);
+    }
+
+    .about-orbit-svg {
+        width: calc(100% - 30px);
+        max-width: 460px;
+    }
+    .about-mobile-toggle,
+    .about-mobile-toggle:focus,
+    .about-mobile-toggle:focus-visible,
+    .about-mobile-toggle:active {
+        outline: 0;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    /* About: the five glass triangles are positioned from the mobile reference. */
+    .glass-triangles-container {
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 22;
+    }
+    .glass-triangle-about-1,
+    .glass-triangle-about-2,
+    .glass-triangle-about-3,
+    .glass-triangle-about-4,
+    .glass-triangle-about-5 {
+        display: block !important;
+        transform-origin: top left;
+    }
+    .glass-triangle-about-1 {left: 75%;top: 18%;width: 22vw;height: 16vw;}
+    .glass-triangle-about-2 {left: 1%;top: 55%;width: 12vw;height: 11vw;}
+    .glass-triangle-about-3 {left: 9%;top: 17%;width: 17vw;height: 20vw;}
+    .glass-triangle-about-4 {left: 68%;top: 57%;width: 25vw;height: 22vw;}
+    .glass-triangle-about-5 {left: 7%;top: 56%;width: 31vw;height: 27vw;}
+    .glass-triangle-about-1 { animation: mobile-about-float-1 25.5s ease-in-out infinite !important; }
+    .glass-triangle-about-2 { animation: mobile-about-float-2 25.5s ease-in-out infinite !important; }
+    .glass-triangle-about-3 { animation: mobile-about-float-3 25.5s ease-in-out infinite !important; }
+    .glass-triangle-about-4 { animation: mobile-about-float-4 25.5s ease-in-out infinite !important; }
+    .glass-triangle-about-5 { animation: mobile-about-float-5 25.5s ease-in-out infinite !important; }
+
+    /* Player keyframes used to override the mobile scale, leaving these too large. */
+    .glass-triangle-player {
+        display: block !important;
+        transform-origin: top left;
+    }
+    .glass-triangle-player-1 {left: 0%;top: 0%;width: 211px;height: 37px;}
+    .glass-triangle-player-2 {right: 4%;bottom: 5%;width: 121px;height: 56px;}
+    .glass-triangle-player-1 { animation: mobile-player-float-1 25.5s ease-in-out infinite !important; }
+    .glass-triangle-player-2 { animation: mobile-player-float-2 25.5s ease-in-out infinite !important; }
+
+    .program-shell {
+        --program-intro-height: 249px;
+        height: auto;
+    }
+    .program-intro {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 16px;
+        width: 100%;
+        height: var(--program-intro-height);
+        padding: 0 16px;
+        background: var(--paper);
+    }
+    .program-intro h2 {
+        width: 180px;
+        margin: 0;
+        color: #212226;
+        font-family: 'Tektur', sans-serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 42px;
+        text-shadow: 2px 0 0 #AEB0BB;
+    }
+    .program-intro p {
+        width: 328px;
+        max-width: 100%;
+        margin: 0;
+        color: #212226;
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 19px;
+    }
+    .program-sticky {
+        position: relative;
+        top: auto;
+        min-height: 340px;
+        height: min(68svh, 600px);
+        touch-action: pan-y;
+    }
+    .program-viewport {
+        height: 100%;
+        padding-left: 16px;
+        overflow: hidden;
+    }
+    .lesson-track { touch-action: pan-y; }
+    .lesson-track img { max-height: min(62svh, 520px); }
+
+    .data-image-section { padding: 0; }
+    .data-image-section picture,
+    .data-image-section img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+    /* Data section triangles: values are from the 360px-wide mobile Figma frame. */
+    .data-mobile-triangle,
+    .data-mobile-glass {
+        position: absolute;
+        display: block;
+        pointer-events: none;
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+    .data-image-section img.data-mobile-triangle {
+        z-index: 76;
+        width: auto;
+        object-fit: contain;
+        background: transparent !important;
+        border: 0;
+        box-shadow: none;
+        clip-path: none !important;
+    }
+    .data-mobile-glass {
+        z-index: 75;
+        background: rgba(200, 205, 212, .3);
+        border: 1px solid rgba(255, 255, 255, .16);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        will-change: transform, backdrop-filter;
+    }
+    .data-mobile-triangle-99,
+    .data-mobile-triangle-106,
+    .data-mobile-triangle-15 {
+        animation: mobile-data-float-1 25.5s ease-in-out infinite;
+    }
+    .data-mobile-triangle-98,
+    .data-mobile-triangle-107,
+    .data-mobile-triangle-16 {
+        animation: mobile-data-float-2 25.5s ease-in-out infinite;
+    }
+    .data-mobile-triangle-98 { animation-delay: -2.5s; }
+    .data-mobile-triangle-107 { animation-delay: -6s; }
+    .data-mobile-triangle-106 { animation-delay: -9s; }
+    .data-mobile-triangle-16 { animation-delay: -12s; }
+    .data-mobile-triangle-15 { animation-delay: -15s; }
+    .data-mobile-triangle-99 {
+        top: 168px;
+        left: 225px;
+        width: 136.5px !important;
+        height: 81px !important;
+    }
+    .data-mobile-glass.data-mobile-triangle-99 { clip-path: url(#mask-data-mobile-1); }
+    .data-mobile-triangle-98 {
+        top: 285px;
+        left: 10px;
+        width: 78px !important;
+        height: 88px !important;
+    }
+    .data-mobile-glass.data-mobile-triangle-98 { clip-path: url(#mask-data-mobile-2); }
+    .data-mobile-triangle-107 {
+        top: 419.44px;
+        left: 316px;
+        width: 86px !important;
+        height: 52px !important;
+    }
+    .data-mobile-glass.data-mobile-triangle-107 { clip-path: url(#mask-data-mobile-3); }
+    .data-mobile-triangle-106 {
+        top: 520.58px;
+        left: 32px;
+        width: 142px !important;
+        height: 47px !important;
+    }
+    .data-mobile-glass.data-mobile-triangle-106 { clip-path: url(#mask-data-mobile-4); }
+    .data-mobile-triangle-16 {
+        top: 630.22px;
+        left: 355px;
+        width: 42px !important;
+        height: 49px !important;
+    }
+    .data-mobile-glass.data-mobile-triangle-16 { clip-path: url(#mask-data-mobile-5); }
+    .data-mobile-triangle-15 {
+        top: 763.22px;
+        left: 249px;
+        width: 80px !important;
+        height: 57px !important;
+    }
+    .data-mobile-glass.data-mobile-triangle-15 { clip-path: url(#mask-data-mobile-6); }
+
+    .faq-container {
+        padding: clamp(76px, 16vw, 100px) 26px 72px;
+        gap: 28px;
+    }
+    .faq-container h2 {
+        font-size: clamp(34px, 9vw, 56px);
+        line-height: 1;
+        text-shadow: 2px 0 0 #AEB0BB;
+    }
+    .faq-list {
+        position: relative;
+        max-height: clamp(290px, 58vw, 360px);
+        overflow: hidden;
+        transition: max-height 320ms ease;
+    }
+    .faq-new:not(.faq--expanded) .faq-list {
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 51%, rgba(0, 0, 0, .72) 70%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0%, #000 51%, rgba(0, 0, 0, .72) 70%, transparent 100%);
+    }
+    .faq-list::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 46%;
+        background: linear-gradient(180deg, rgba(238, 238, 238, 0), var(--paper) 88%);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 220ms ease;
+    }
+    .faq-list details { width: 100%; }
+    .faq-list summary {
+        padding: 18px 6px;
+        font-size: clamp(16px, 3.9vw, 24px);
+        line-height: 1.35;
+    }
+    .faq-list summary span {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    .faq-list .mobile-only { display: block; }
+    .faq-list summary svg {
+        width: clamp(18px, 3.6vw, 22px);
+        height: auto;
+        margin-left: 16px;
+    }
+    .faq-list details p {
+        padding: 0 6px;
+        font-size: clamp(14px, 3.6vw, 18px);
+        line-height: 1.45;
+    }
+    .faq-new.faq--expanded .faq-list {
+        max-height: 10000px;
+        overflow: visible;
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+    .faq-new.faq--expanded .faq-list::after { opacity: 0; }
+
+    .purchase-inner { position: relative; }
+    .purchase-inner picture { display: block; }
+    .purchase-button {
+        position: absolute;
+        top: auto;
+        right: auto;
+        bottom: 12%;
+        left: 52%;
+        width: min(245px, 72vw);
+        max-width: none;
+        height: auto;
+        aspect-ratio: 245 / 73;
+        margin: 0;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: transparent;
+        /* The mobile SVG already has its sloped silhouette baked in. */
+        transform: translateX(-50%);
+        transform-origin: center;
+        clip-path: none;
+        font-size: clamp(18px, 5vw, 24px);
+        white-space: nowrap;
+    }
+    .purchase-button-shape {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    .purchase-button > span {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 100%;
+        text-align: center;
+        transform: rotate(-5.08deg);
+        transform-origin: center;
+    }
+    .purchase-button:hover { transform: translateX(-50%) scale(1.02)  }
+
+    .paid-mobile-triangle {
+        position: absolute;
+        z-index: 5;
+        display: block;
+        pointer-events: none;
+        background: rgba(200, 205, 212, .3);
+        border: 1px solid rgba(255, 255, 255, .2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        will-change: transform, backdrop-filter;
+    }
+    .paid-mobile-triangle-108 {
+        top: 2%;
+        left: 33px;
+        width: 135px;
+        height: 68px;
+        clip-path: url(#mask-purchase-mobile-108);
+        transform: rotate(
+7deg);
+        transform-origin: top left;
+        animation: mobile-paid-float-108 25.5s ease-in-out infinite;
+    }
+    .paid-mobile-triangle-23 {
+        top: 16%;
+        right: 52px;
+        width: 115px;
+        height: 22px;
+        clip-path: url(#mask-purchase-mobile-23);
+        transform: matrix(1.8, ., .17, 1.99, 0, 0);
+        transform-origin: top right;
+        animation: mobile-paid-float-23 25.5s ease-in-out infinite;
+    }
+    .paid-mobile-triangle-102 {
+        right: 163px;
+        bottom: 39%;
+        width: 114px;
+        height: 55px;
+        clip-path: url(#mask-purchase-mobile-102);
+        transform: matrix(-.39, .92, 1.92, .39, 0, 0);
+        transform-origin: top right;
+        animation: mobile-paid-float-102 25.5s ease-in-out infinite;
+    }
+
+    .footer-new {
+        min-height: 460px;
+        margin-top: 64px;
+        overflow: hidden;
+    }
+    .footer-bg {
+        position: absolute;
+        top: -122px;
+        right: 0;
+        bottom: auto;
+        left: 0;
+        width: 100%;
+        height: calc(100% + 122px);
+        object-fit: cover;
+        object-position: center;
+    }
+    .glass-triangle-footer {
+        z-index: 4;
+        display: block !important;
+        background: rgba(200, 205, 212, .3);
+        border: 1px solid rgba(255, 255, 255, .2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        animation: footer-mobile-float 25.5s ease-in-out infinite;
+    }
+    .glass-triangle-footer-1 {
+        top: 33px;
+        left: 6px;
+        width: 201px;
+        height: 119px;
+        clip-path: url(#mask-footer-1);
+    }
+    .glass-triangle-footer-2 {
+        top: 48px;
+        right: 9px;
+        width: 197px;
+        height: 85px;
+        clip-path: url(#mask-footer-2);
+        animation-delay: -7s;
+    }
+    .footer-content {
+        top: auto;
+        bottom: 8.85%;
+        left: 50%;
+        width: 206px;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 23px;
+        transform: translateX(-50%);
+    }
+    .footer-center {
+        width: 206px;
+        height: 106px;
+        gap: 24px;
+        order: 0;
+    }
+    .footer-logo {
+        width: 66px;
+        height: 63px;
+    }
+    .footer-title {
+        width: 145px;
+        font-size: 14px;
+        line-height: 19px;
+        align-self: auto;
+    }
+    .footer-link-left,
+    .footer-link-right {
+        width: auto;
+        font-size: 14px;
+        line-height: 19px;
+    }
+    .footer-link-left { order: 1; }
+    .footer-link-right { order: 2; }
+
+    * { -webkit-tap-highlight-color: transparent; }
+    a:focus,
+    button:focus,
+    summary:focus,
+    [role="button"]:focus {
+        outline: none;
+    }
+}
+
+@media (min-width: 420px) and (max-width: 768px) {
+    /* Wide phones need more vertical breathing room between copy and CTA. */
+    .hero { height: 860px; }
+    .footer-content { bottom: 16%; }
+}
