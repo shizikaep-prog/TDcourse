@@ -63,6 +63,19 @@ button { font: inherit; }
         max-width: 1920px;
         margin-left: auto;
         margin-right: auto;
+        /* Keep the desktop composition a fixed 1920px canvas on 2K/4K.
+           `clip` prevents oversized hero artwork from creating page-wide
+           horizontal scrolling without turning main into a scroll container
+           (which would break the sticky program section). */
+        overflow-x: clip;
+    }
+
+    .footer-new {
+        width: 1920px;
+        max-width: 1920px;
+        margin-left: auto;
+        margin-right: auto;
+        overflow-x: clip;
     }
 }
 
