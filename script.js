@@ -5,6 +5,14 @@ const sticky = document.getElementById('programSticky');
 const programIntro = document.querySelector('.program-intro');
 const mobileProgramQuery = window.matchMedia('(max-width: 768px)');
 
+function updateWideDesktopScale() {
+    const viewportWidth = document.documentElement.clientWidth;
+    const scale = viewportWidth > 1920 ? viewportWidth / 1920 : 1;
+    document.documentElement.style.setProperty('--wide-desktop-scale', scale.toFixed(6));
+}
+
+updateWideDesktopScale();
+
 let currentTravel = 0;
 let startOffset = 0;
 let currentProgress = 0;
@@ -52,10 +60,8 @@ function updateTravel() {
     if (!program || !track) return;
     const viewport = document.querySelector('.program-viewport');
     const pad = viewport ? parseFloat(getComputedStyle(viewport).paddingLeft) || 94 : 94;
-    // The desktop canvas is capped at 1920px on wide monitors. Use the
-    // actual program viewport instead of the full browser width, otherwise
-    // the sticky travel distance and its vertical spacer become incorrect
-    // on 2K/4K screens.
+    // Hero/About use their own wide-screen scale. Program stays fluid, so its
+    // travel must be calculated from the actual program viewport width.
     const viewportWidth = viewport ? viewport.clientWidth : window.innerWidth;
     currentTravel = Math.max(0, track.scrollWidth - viewportWidth + pad);
     program.style.setProperty('--program-travel', `${currentTravel}px`);
@@ -77,6 +83,7 @@ function updateProgram() {
 }
 
 window.addEventListener('resize', () => {
+    updateWideDesktopScale();
     updateTravel();
     updateProgram();
 }, { passive: true });

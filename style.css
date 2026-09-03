@@ -6,6 +6,7 @@
     --line: rgba(23, 25, 29, .18);
     --display: "Tektur", "Arial Narrow", sans-serif;
     --body: "Nunito Sans", Arial, sans-serif;
+    --wide-desktop-scale: 1;
 }
 
 /* Tektur fonts */
@@ -54,28 +55,48 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 .mobile-only { display: none; }
 
-/* Desktop composition is authored on a 1920px canvas. Keep that canvas
-   centered on wider 2K/4K viewports so fixed video/triangle coordinates do
-   not stretch the layout or leave a second empty composition on the right. */
+/* Desktop composition: keep a single fluid canvas on wider 2K/4K viewports.
+   Fixed-position artwork is clipped at the page edge so it cannot create a
+   second scrollable area on the right. */
 @media (min-width: 1921px) {
     main#top {
-        width: 1920px;
-        max-width: 1920px;
-        margin-left: auto;
-        margin-right: auto;
-        /* Keep the desktop composition a fixed 1920px canvas on 2K/4K.
-           `clip` prevents oversized hero artwork from creating page-wide
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        /* `clip` prevents oversized hero artwork from creating page-wide
            horizontal scrolling without turning main into a scroll container
            (which would break the sticky program section). */
         overflow-x: clip;
     }
 
     .footer-new {
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        overflow-x: clip;
+    }
+
+    /* These sections were composed on a 1920px Figma frame. Scale every
+       complete section as one unit so pixel and percentage coordinates keep
+       the same relationship on 2K/4K screens. Program intentionally stays
+       fluid because its sticky horizontal travel uses the real viewport. */
+    .hero,
+    .about,
+    .data-image-section,
+    .faq-new,
+    .purchase,
+    .footer-new {
         width: 1920px;
         max-width: 1920px;
-        margin-left: auto;
-        margin-right: auto;
-        overflow-x: clip;
+        zoom: var(--wide-desktop-scale);
+    }
+
+    main#top .hero {
+        width: 1920px;
+        height: 1462px;
+        min-height: 1462px;
     }
 }
 
