@@ -220,8 +220,35 @@ var mainVideo = document.getElementById('course-video');
 var btnPause = document.getElementById('btn-pause');
 var btnPlay = document.getElementById('btn-play');
 var fadeTimeout = null;
+var playerSection = mainVideo ? mainVideo.closest('.player-section') : null;
+
+// The deployed page intentionally has no course video files.  Safari still
+// paints the empty <video> element as a solid dark rectangle, so on mobile we
+// remove only that unavailable player while keeping the section intact when a
+// real video source is supplied later.
+function markPlayerUnavailable() {
+    if (!playerSection) return;
+    playerSection.classList.add('media-unavailable');
+    updateTravel();
+}
+
+function markPlayerAvailable() {
+    if (playerSection) playerSection.classList.remove('media-unavailable');
+}
+
+if (mainVideo) {
+    mainVideo.addEventListener('error', markPlayerUnavailable);
+    mainVideo.addEventListener('loadedmetadata', markPlayerAvailable);
+    var playerSource = mainVideo.getAttribute('src') || '';
+    // Windows-only paths cannot resolve on the hosted page.  Mark them
+    // immediately, avoiding a flash of the Safari fallback rectangle.
+    if (/^[A-Za-z]:[\\/]/.test(playerSource) || /^file:/i.test(playerSource)) {
+        markPlayerUnavailable();
+    }
+}
 
 function showPauseButton() {
+    if (!btnPause || !btnPlay) return;
     btnPause.style.display = 'flex';
     btnPlay.style.display = 'none';
     btnPlay.classList.remove('fade-out');
@@ -229,6 +256,7 @@ function showPauseButton() {
 }
 
 function showPlayButton() {
+    if (!btnPause || !btnPlay) return;
     btnPause.style.display = 'none';
     btnPlay.style.display = 'flex';
     btnPlay.classList.remove('fade-out');

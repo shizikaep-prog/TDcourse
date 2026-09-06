@@ -1199,21 +1199,47 @@ button { font: inherit; }
     flex-direction: row;
     align-items: flex-end;
     padding: 0;
-    gap: 180px;
+    gap: 146px;
     z-index: 10;
 }
-.footer-link-left,
-.footer-link-right {
+.footer-social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
     font-family: 'Nunito Sans', sans-serif;
     font-weight: 400;
     font-size: 20px;
     line-height: 27px;
     color: #212226;
-    text-decoration: none;
     flex: none;
 }
-.footer-link-left { width: 61px; order: 0; }
-.footer-link-right { width: 102px; order: 2; }
+.footer-link-left { width: 110px; order: 0; }
+.footer-link-right { width: 120px; order: 2; }
+.footer-social-label {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+.footer-social-icon-link {
+    /* Manual tuning hooks for each footer icon. */
+    --icon-scale: 0.7;
+    --icon-x: 0px;
+    --icon-y: 0px;
+    display: block;
+    width: 96px;
+    height: 96px;
+    flex: none;
+    transform: translate(var(--icon-x), var(--icon-y)) scale(var(--icon-scale));
+    transform-origin: center;
+}
+.footer-social-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 .footer-center {
     display: flex;
     flex-direction: column;
@@ -1646,6 +1672,13 @@ button { font: inherit; }
         height: 56.25vw;
         max-height: 430px;
     }
+    .player-section.media-unavailable {
+        display: none;
+    }
+    .player-section.media-unavailable .player-btn,
+    .player-section.media-unavailable .player-decor {
+        display: none !important;
+    }
     .player-btn-pause {
         width: min(42vw, 190px);
         height: min(33vw, 150px);
@@ -1899,6 +1932,14 @@ button { font: inherit; }
         display: block;
         width: 100%;
         height: auto;
+    }
+    /* Keep the mobile data artwork as a vector layer in Safari instead of
+       letting the image decoder choose a low-resolution intermediate bitmap. */
+    .data-image-section picture > img.data-art {
+        image-rendering: auto;
+        -webkit-image-rendering: auto;
+        transform: translateZ(0);
+        backface-visibility: hidden;
     }
     /* Треугольники Data с координатами из мобильного макета 360px */
     .data-mobile-triangle,
@@ -2177,13 +2218,13 @@ button { font: inherit; }
         top: auto;
         bottom: 8.85%;
         left: 50%;
-        width: 206px;
-        height: 190px;
+        width: 220px;
+        height: 332px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 23px;
+        justify-content: flex-start;
+        gap: 20px;
         transform: translateX(-50%);
     }
     .footer-center {
@@ -2202,11 +2243,16 @@ button { font: inherit; }
         line-height: 19px;
         align-self: auto;
     }
-    .footer-link-left,
-    .footer-link-right {
-        width: auto;
+    .footer-social {
+        width: 206px;
         font-size: 14px;
         line-height: 19px;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+    .footer-social-icon-link {
+        width: 66px;
+        height: 66px;
     }
     .footer-link-left { order: 1; }
     .footer-link-right { order: 2; }
