@@ -242,7 +242,7 @@ button { font: inherit; }
 }
 @keyframes about-sway-5 {
     0% { transform: scale(1.2) translate(0px, 0px) rotate(0deg); }
-    50% {transform: scale(1.2) translate(4px, -30px) rotate(1deg);}
+    50% {transform: scale(1.2) translate(4px, 30px) rotate(1deg);}
     100% { transform: scale(1.2) translate(0px, 0px) rotate(0deg); }
 }
 
