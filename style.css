@@ -100,10 +100,6 @@ button { font: inherit; }
     }
 }
 
-@media (min-width: 769px) {
-    .faq-list summary { padding-right: 8px; padding-left: 8px; }
-}
-
 /* Masks (hidden) */
 .mask-svg {
     position: absolute;
@@ -1174,6 +1170,26 @@ button { font: inherit; }
     color: #515966;
     width: 100%;
     text-align: left;
+}
+
+@media (min-width: 769px) {
+    .faq-list summary {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+    /* Keep the arrow in its own fixed flex item. At a narrow desktop window
+       the question text uses the remaining width and wraps instead of
+       running underneath the arrow. */
+    .faq-list summary span {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-right: 8px;
+        overflow-wrap: anywhere;
+    }
+    .faq-list summary svg {
+        flex: 0 0 auto;
+        margin-left: 8px;
+    }
 }
 
 /* Footer */
