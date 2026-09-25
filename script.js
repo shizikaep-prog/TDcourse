@@ -25,6 +25,15 @@ let lastDragX = 0;
 let lastDragTime = 0;
 let swipeVelocity = 0;
 let inertiaFrame = null;
+// Desktop wheel smoothing: keep the wheel target separate from the current
+// scroll position and ease toward it on animation frames.
+let programWheelTargetY = null;
+let programWheelCurrentY = null;
+let programWheelRaf = null;
+const PROGRAM_WHEEL_MULT = 1.0;
+const PROGRAM_WHEEL_SMOOTHNESS = 0.055;
+const PROGRAM_WHEEL_STOP_EPSILON = 0.05;
+const PROGRAM_WHEEL_EDGE_EPSILON = 48;
 
 function renderProgramTrack() {
     track.style.transform = `translate3d(${-currentProgress}px, 0, 0)`;
@@ -34,6 +43,44 @@ function stopProgramInertia() {
     if (inertiaFrame !== null) cancelAnimationFrame(inertiaFrame);
     inertiaFrame = null;
     swipeVelocity = 0;
+}
+
+function stopProgramWheel() {
+    if (programWheelRaf !== null) cancelAnimationFrame(programWheelRaf);
+    programWheelRaf = null;
+    programWheelTargetY = null;
+    programWheelCurrentY = null;
+}
+
+function clampProgramWheelY(value) {
+    const min = startOffset;
+    const max = startOffset + currentTravel;
+    return Math.max(min, Math.min(max, value));
+}
+
+function animateProgramWheel() {
+    if (programWheelTargetY === null || programWheelCurrentY === null || mobileProgramQuery.matches) {
+        programWheelRaf = null;
+        return;
+    }
+
+    const diff = programWheelTargetY - programWheelCurrentY;
+    if (Math.abs(diff) < PROGRAM_WHEEL_STOP_EPSILON) {
+        programWheelCurrentY = programWheelTargetY;
+        window.scrollTo({ top: programWheelCurrentY, behavior: 'instant' });
+        programWheelRaf = null;
+        return;
+    }
+
+    programWheelCurrentY += diff * PROGRAM_WHEEL_SMOOTHNESS;
+    window.scrollTo({ top: programWheelCurrentY, behavior: 'instant' });
+    programWheelRaf = requestAnimationFrame(animateProgramWheel);
+}
+
+function startProgramWheel() {
+    if (programWheelRaf === null) {
+        programWheelRaf = requestAnimationFrame(animateProgramWheel);
+    }
 }
 
 function startProgramInertia() {
@@ -88,7 +135,16 @@ window.addEventListener('resize', () => {
     updateProgram();
 }, { passive: true });
 
-window.addEventListener('scroll', updateProgram, { passive: true });
+window.addEventListener('scroll', () => {
+    updateProgram();
+
+    // If the page was moved by the native scrollbar, keyboard, or another
+    // input source, use that position as the next wheel animation baseline.
+    if (programWheelRaf === null) {
+        programWheelTargetY = null;
+        programWheelCurrentY = window.scrollY;
+    }
+}, { passive: true });
 
 function onDragStart(e) {
     const ev = e.touches ? e.touches[0] : e;
@@ -99,6 +155,13 @@ function onDragStart(e) {
     dragStartScroll = currentProgress;
     touchAxis = null;
     stopProgramInertia();
+    stopProgramWheel();
+    if (!mobileProgramQuery.matches) {
+        // Start the desktop drag from the real page position. The pointer
+        // will update the target while the same RAF smoother moves the page.
+        programWheelCurrentY = window.scrollY;
+        programWheelTargetY = window.scrollY;
+    }
     lastDragX = ev.clientX;
     lastDragTime = performance.now();
 
@@ -130,8 +193,8 @@ function onDragMove(e) {
     const deltaX = ev.clientX - dragStartX;
     const newProgress = Math.min(Math.max(dragStartScroll - deltaX, 0), currentTravel);
     const previousProgress = currentProgress;
-    currentProgress = newProgress;
     if (mobileProgramQuery.matches) {
+        currentProgress = newProgress;
         const now = performance.now();
         const elapsed = Math.max(now - lastDragTime, 1);
         const instantVelocity = (currentProgress - previousProgress) / elapsed;
@@ -140,7 +203,8 @@ function onDragMove(e) {
         lastDragTime = now;
         renderProgramTrack();
     } else {
-        window.scrollTo({ top: startOffset + newProgress, behavior: 'instant' });
+        programWheelTargetY = clampProgramWheelY(startOffset + newProgress);
+        startProgramWheel();
     }
     e.preventDefault();
 }
@@ -157,32 +221,12 @@ function onDragEnd(e) {
     isDragging = false;
     sticky.style.cursor = 'grab';
     if (!mobileProgramQuery.matches) {
-        window.scrollTo({ top: startOffset + currentProgress, behavior: 'instant' });
+        // Keep easing to the last pointer position after the mouse is released.
+        startProgramWheel();
     } else {
         startProgramInertia();
     }
     touchAxis = null;
-}
-
-function onWheel(e) {
-    if (mobileProgramQuery.matches) return;
-    if (isDragging) return;
-    const rect = sticky.getBoundingClientRect();
-    const isOver = e.clientX >= rect.left && e.clientX <= rect.right &&
-                   e.clientY >= rect.top && e.clientY <= rect.bottom;
-    if (!isOver) return;
-
-    const currentScrollY = window.scrollY;
-    const endOffset = startOffset + currentTravel;
-    if (currentScrollY < startOffset - 1 || currentScrollY > endOffset + 1) return;
-
-    const delta = e.deltaY;
-    const newProgress = Math.min(Math.max(currentProgress + delta * 0.8, 0), currentTravel);
-    if (newProgress !== currentProgress) {
-        currentProgress = newProgress;
-        window.scrollTo({ top: startOffset + newProgress, behavior: 'instant' });
-        e.preventDefault();
-    }
 }
 
 sticky.addEventListener('mousedown', onDragStart);
@@ -193,6 +237,48 @@ sticky.addEventListener('touchstart', onDragStart, { passive: false });
 document.addEventListener('touchmove', onDragMove, { passive: false });
 document.addEventListener('touchend', onDragEnd, { passive: false });
 document.addEventListener('touchcancel', onDragEnd, { passive: false });
+
+function onWheel(e) {
+    if (mobileProgramQuery.matches || isDragging) return;
+
+    const rect = sticky.getBoundingClientRect();
+    const isOverProgram = e.clientX >= rect.left && e.clientX <= rect.right
+        && e.clientY >= rect.top && e.clientY <= rect.bottom;
+    if (!isOverProgram) return;
+
+    const endOffset = startOffset + currentTravel;
+    const currentScrollY = window.scrollY;
+    if (currentScrollY < startOffset - 1 || currentScrollY > endOffset + 1) return;
+
+    const rawDelta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+    if (rawDelta === 0) return;
+
+    let delta = rawDelta;
+    if (e.deltaMode === 1) delta *= 16;
+    else if (e.deltaMode === 2) delta *= 100;
+
+    if (programWheelTargetY === null || programWheelCurrentY === null) {
+        programWheelCurrentY = currentScrollY;
+        programWheelTargetY = currentScrollY;
+    }
+
+    const nextWheelTargetY = programWheelTargetY + delta * PROGRAM_WHEEL_MULT;
+    const isAtProgramStart = currentScrollY <= startOffset + PROGRAM_WHEEL_EDGE_EPSILON
+        && nextWheelTargetY <= startOffset + PROGRAM_WHEEL_EDGE_EPSILON;
+    const isAtProgramEnd = currentScrollY >= endOffset - PROGRAM_WHEEL_EDGE_EPSILON
+        && nextWheelTargetY >= endOffset - PROGRAM_WHEEL_EDGE_EPSILON;
+
+    // Let the page continue scrolling once horizontal travel reaches either edge.
+    if ((delta < 0 && isAtProgramStart) || (delta > 0 && isAtProgramEnd)) {
+        stopProgramWheel();
+        return;
+    }
+
+    programWheelTargetY = clampProgramWheelY(nextWheelTargetY);
+
+    e.preventDefault();
+    startProgramWheel();
+}
 
 sticky.addEventListener('wheel', onWheel, { passive: false });
 
@@ -287,12 +373,102 @@ var faqSection = document.querySelector('.faq-new');
 if (faqSection) {
     var faqItems = faqSection.querySelectorAll('details');
 
+    function animateFaqAnswer(item) {
+        var answer = item.querySelector('p');
+        var summary = item.querySelector('summary');
+        if (!answer) return;
+
+        answer.classList.add('faq-answer');
+        answer.style.maxHeight = '0px';
+        answer.style.opacity = '0';
+        answer.style.transform = 'translateY(-6px)';
+        answer.style.marginBottom = '0px';
+
+        var isClosing = false;
+        var suppressNextToggle = false;
+        var closeFallback = null;
+
+        answer.addEventListener('transitionend', function(event) {
+            // The same transitionend event also fires while an answer is
+            // collapsing. Do not restore `max-height: none` during that
+            // phase: doing so briefly expands the answer for one frame
+            // before <details> closes and makes everything below jump.
+            if (event.propertyName === 'max-height' && item.open && !isClosing) {
+                answer.style.maxHeight = 'none';
+            }
+        });
+
+        function openAnswer() {
+            answer.style.maxHeight = '0px';
+            answer.style.opacity = '0';
+            answer.style.transform = 'translateY(-6px)';
+            answer.style.marginBottom = '0px';
+            requestAnimationFrame(function() {
+                if (!item.open) return;
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                answer.style.opacity = '1';
+                answer.style.transform = 'translateY(0)';
+                answer.style.marginBottom = '13px';
+            });
+        }
+
+        function finishClose() {
+            if (!isClosing) return;
+            isClosing = false;
+            if (closeFallback !== null) window.clearTimeout(closeFallback);
+            closeFallback = null;
+            // Close details only after the answer has finished animating.
+            suppressNextToggle = true;
+            item.open = false;
+        }
+
+        function closeAnswer() {
+            if (isClosing) return;
+            isClosing = true;
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            answer.style.opacity = '1';
+            answer.style.transform = 'translateY(0)';
+            answer.style.marginBottom = '13px';
+            requestAnimationFrame(function() {
+                answer.style.maxHeight = '0px';
+                answer.style.opacity = '0';
+                answer.style.transform = 'translateY(-6px)';
+                answer.style.marginBottom = '0px';
+            });
+            answer.addEventListener('transitionend', function(event) {
+                if (event.propertyName === 'max-height') finishClose();
+            }, { once: true });
+            // Fallback for reduced-motion settings where transitionend is not fired.
+            closeFallback = window.setTimeout(finishClose, 420);
+        }
+
+        // Native details closes its content immediately. Keep it open while
+        // the answer animates out, then let finishClose close the element.
+        if (summary) {
+            summary.addEventListener('click', function(event) {
+                if (item.open && !isClosing) {
+                    event.preventDefault();
+                    closeAnswer();
+                }
+            });
+        }
+
+        item.addEventListener('toggle', function() {
+            if (suppressNextToggle) {
+                suppressNextToggle = false;
+                return;
+            }
+            if (item.open) openAnswer();
+        });
+    }
+
     function updateFaqPreview() {
         var hasOpenItem = Array.from(faqItems).some(function(item) { return item.open; });
         faqSection.classList.toggle('faq--expanded', hasOpenItem);
     }
 
     faqItems.forEach(function(item) {
+        animateFaqAnswer(item);
         item.addEventListener('toggle', updateFaqPreview);
     });
 
@@ -301,6 +477,8 @@ if (faqSection) {
 
 // About: mouse interaction on desktop and tap-to-reveal interaction on mobile.
 var aboutSection = document.querySelector('.about');
+var aboutRingElement = document.querySelector('.about-orbit-ring');
+if (aboutRingElement && window.VinqyRing) window.VinqyRing.mount(aboutRingElement);
 var aboutToggle = document.querySelector('.about-mobile-toggle');
 var desktopAboutQuery = window.matchMedia('(min-width: 769px) and (hover: hover)');
 
