@@ -12,25 +12,21 @@
 /* Tektur fonts */
 @font-face {
     font-family: 'Tektur';
-    src: url('./fonts/Tektur-Regular.woff2') format('woff2'),
-        url('./fonts/Tektur-Regular.woff') format('woff'),
-        url('./fonts/Tektur-Regular.ttf') format('truetype');
+    src: url('../assets/fonts/Tektur-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 @font-face {
     font-family: 'Tektur';
-    src: url('./fonts/Tektur-Bold.woff2') format('woff2'),
-        url('./fonts/Tektur-Bold.woff') format('woff'),
-        url('./fonts/Tektur-Bold.ttf') format('truetype');
+    src: url('../assets/fonts/Tektur-SemiBold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
 @font-face {
     font-family: 'Tektur';
-    src: url('./fonts/static/Tektur-SemiBold.ttf') format('truetype');
+    src: url('../assets/fonts/Tektur-SemiBold.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -40,7 +36,7 @@
    Russian text cannot fall back to a system serif font. */
 @font-face {
     font-family: 'Nunito Sans';
-    src: url('./fonts/NunitoSans-Regular-cyrillic-ext.woff2') format('woff2');
+    src: url('../assets/fonts/NunitoSans-Regular-cyrillic-ext.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: block;
@@ -48,7 +44,7 @@
 }
 @font-face {
     font-family: 'Nunito Sans';
-    src: url('./fonts/NunitoSans-Regular-cyrillic.woff2') format('woff2');
+    src: url('../assets/fonts/NunitoSans-Regular-cyrillic.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: block;
@@ -56,7 +52,7 @@
 }
 @font-face {
     font-family: 'Nunito Sans';
-    src: url('./fonts/NunitoSans-Regular-vietnamese.woff2') format('woff2');
+    src: url('../assets/fonts/NunitoSans-Regular-vietnamese.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: block;
@@ -64,7 +60,7 @@
 }
 @font-face {
     font-family: 'Nunito Sans';
-    src: url('./fonts/NunitoSans-Regular-latin-ext.woff2') format('woff2');
+    src: url('../assets/fonts/NunitoSans-Regular-latin-ext.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: block;
@@ -72,7 +68,7 @@
 }
 @font-face {
     font-family: 'Nunito Sans';
-    src: url('./fonts/NunitoSans-Regular-latin.woff2') format('woff2');
+    src: url('../assets/fonts/NunitoSans-Regular-latin.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: block;
@@ -90,7 +86,7 @@ body {
     font-family: var(--body);
     font-size: 16px;
     overflow-x: clip;
-    background: url('mat/main background.png') no-repeat top center;
+    background: url('../assets/shared/site-background.png') no-repeat top center;
     background-size: auto 100%;
     background-color: var(--paper);
 }
@@ -1098,7 +1094,7 @@ button { font: inherit; }
     bottom: 6px;
     left: 0;
     right: 0;
-    background: #e0e4ea url(mat/FAQ-background.svg) center / cover no-repeat;
+    background: #e0e4ea url(../assets/faq/background.svg) center / cover no-repeat;
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;

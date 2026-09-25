@@ -1,7 +1,7 @@
 /*! vinqy-ring v4 — procedural ambient ring. No dependencies.
  *
  *   <div id="ring" style="width:100%;aspect-ratio:1"></div>
- *   <script src="ring.js"></script>
+ *   <script src="./js/ring.js"></script>
  *   <script>VinqyRing.mount('#ring');</script>
  *
  * Motion idea: energy comes from the center. Before a hit, a faint pressure
