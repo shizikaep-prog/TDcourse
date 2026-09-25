@@ -2171,12 +2171,12 @@ button { font: inherit; }
     }
     .footer-bg {
         position: absolute;
-        top: -122px;
+        top: -190px;
         right: 0;
         bottom: auto;
         left: 0;
         width: 100%;
-        height: calc(100% + 122px);
+        height: calc(100% + 190px);
         object-fit: cover;
         object-position: center;
     }
