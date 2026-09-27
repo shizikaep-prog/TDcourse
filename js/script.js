@@ -238,6 +238,16 @@ document.addEventListener('touchmove', onDragMove, { passive: false });
 document.addEventListener('touchend', onDragEnd, { passive: false });
 document.addEventListener('touchcancel', onDragEnd, { passive: false });
 
+function onProgramAutoScrollStart(e) {
+    if (e.button !== 1) return;
+
+    // Let the browser's middle-button autoscroll own window.scrollY from here.
+    stopProgramWheel();
+    programWheelCurrentY = window.scrollY;
+}
+
+document.addEventListener('mousedown', onProgramAutoScrollStart);
+
 function onWheel(e) {
     if (mobileProgramQuery.matches || isDragging) return;
 

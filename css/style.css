@@ -164,7 +164,7 @@ button { font: inherit; }
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     will-change: transform;
     pointer-events: none;
-    animation-duration: 15.5s;
+    animation-duration: 12.5s;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
     z-index: 151;
@@ -330,20 +330,29 @@ button { font: inherit; }
 .data-mobile-glass { display: none; }
 .glass-triangle-data-1 {
     left: 15%;
-    bottom: 5%;
+    bottom: 8%;
     width: 230px;
     height: 221px;
     clip-path: url(#mask-about-5);
     animation-name: triangle-data-1;
 }
 .glass-triangle-data-2 {
-    right: 35%;
-    top: 15%;
+    right: 33%;
+    top: 0%;
     width: 286px;
     height: 216px;
     clip-path: url(#mask-data-2);
     animation-name: triangle-data-2;
     animation-delay: -2.5s;
+}
+.glass-triangle-data-3 {
+    right: 9%;
+    bottom: 38%;
+    width: 256px;
+    height: 161px;
+    clip-path: url(#mask-data-3);
+    animation-name: triangle-data-2;
+    animation-delay: -5s;
 }
 
 /* Секция Purchase */
@@ -1116,7 +1125,7 @@ button { font: inherit; }
 .faq-list details summary:hover svg path { fill: #2E3035; }
 .faq-list details p {
     margin: 0 0 13px 0;
-    padding: 0;
+    padding-left: 8px;
     font-family: 'Nunito Sans';
     font-weight: 400;
     font-size: 14px;
@@ -2371,7 +2380,7 @@ button { font: inherit; }
 /* .glass-triangle-data-1 */
 @keyframes triangle-data-1 {
     0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
-    50% { transform: translate(0px, -30px) scale(1) rotate(1deg); }
+    50% {transform: translate(0px, -71px) scale(1) rotate(1deg);}
     100% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
 }
 
