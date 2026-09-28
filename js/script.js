@@ -1,17 +1,21 @@
-// Program horizontal scroll + drag + wheel
+// Program horizontal scroll follows one smoothly controlled page position.
 const program = document.querySelector('.program-shell');
 const track = document.querySelector('.lesson-track');
 const sticky = document.getElementById('programSticky');
-const programIntro = document.querySelector('.program-intro');
 const mobileProgramQuery = window.matchMedia('(max-width: 768px)');
 
 function updateWideDesktopScale() {
     const viewportWidth = document.documentElement.clientWidth;
     const scale = viewportWidth > 1920 ? viewportWidth / 1920 : 1;
     document.documentElement.style.setProperty('--wide-desktop-scale', scale.toFixed(6));
+    requestAnimationFrame(() => {
+        const backgroundHeight = Math.ceil(document.documentElement.scrollHeight * scale);
+        document.documentElement.style.setProperty('--wide-desktop-background-height', `${backgroundHeight}px`);
+    });
 }
 
 updateWideDesktopScale();
+window.addEventListener('load', updateWideDesktopScale, { once: true });
 
 let currentTravel = 0;
 let startOffset = 0;
@@ -25,15 +29,17 @@ let lastDragX = 0;
 let lastDragTime = 0;
 let swipeVelocity = 0;
 let inertiaFrame = null;
-// Desktop wheel smoothing: keep the wheel target separate from the current
-// scroll position and ease toward it on animation frames.
-let programWheelTargetY = null;
-let programWheelCurrentY = null;
-let programWheelRaf = null;
-const PROGRAM_WHEEL_MULT = 1.0;
-const PROGRAM_WHEEL_SMOOTHNESS = 0.055;
-const PROGRAM_WHEEL_STOP_EPSILON = 0.05;
-const PROGRAM_WHEEL_EDGE_EPSILON = 48;
+let programScrollFrame = null;
+let programMeasureFrame = null;
+let programMotionFrame = null;
+let programMotionTargetY = null;
+let programMotionOwner = null;
+let programMotionLastTime = 0;
+let programMotionExpectedY = null;
+
+const PROGRAM_WHEEL_EASE_RATE = 15;
+const PROGRAM_DRAG_EASE_RATE = 22;
+const PROGRAM_WHEEL_MAX_LEAD = 300;
 
 function renderProgramTrack() {
     track.style.transform = `translate3d(${-currentProgress}px, 0, 0)`;
@@ -45,41 +51,46 @@ function stopProgramInertia() {
     swipeVelocity = 0;
 }
 
-function stopProgramWheel() {
-    if (programWheelRaf !== null) cancelAnimationFrame(programWheelRaf);
-    programWheelRaf = null;
-    programWheelTargetY = null;
-    programWheelCurrentY = null;
+function stopProgramMotion() {
+    if (programMotionFrame !== null) cancelAnimationFrame(programMotionFrame);
+    programMotionFrame = null;
+    programMotionTargetY = null;
+    programMotionOwner = null;
+    programMotionLastTime = 0;
+    programMotionExpectedY = null;
 }
 
-function clampProgramWheelY(value) {
-    const min = startOffset;
-    const max = startOffset + currentTravel;
-    return Math.max(min, Math.min(max, value));
-}
+function animateProgramMotion(timestamp) {
+    programMotionFrame = null;
+    if (programMotionTargetY === null) return;
 
-function animateProgramWheel() {
-    if (programWheelTargetY === null || programWheelCurrentY === null || mobileProgramQuery.matches) {
-        programWheelRaf = null;
+    const currentY = window.scrollY;
+    const distance = programMotionTargetY - currentY;
+    if (Math.abs(distance) <= 0.5) {
+        window.scrollTo({ top: programMotionTargetY, behavior: 'instant' });
+        updateProgram();
+        stopProgramMotion();
         return;
     }
 
-    const diff = programWheelTargetY - programWheelCurrentY;
-    if (Math.abs(diff) < PROGRAM_WHEEL_STOP_EPSILON) {
-        programWheelCurrentY = programWheelTargetY;
-        window.scrollTo({ top: programWheelCurrentY, behavior: 'instant' });
-        programWheelRaf = null;
-        return;
-    }
-
-    programWheelCurrentY += diff * PROGRAM_WHEEL_SMOOTHNESS;
-    window.scrollTo({ top: programWheelCurrentY, behavior: 'instant' });
-    programWheelRaf = requestAnimationFrame(animateProgramWheel);
+    const elapsed = programMotionLastTime
+        ? Math.min((timestamp - programMotionLastTime) / 1000, 0.05)
+        : 1 / 60;
+    programMotionLastTime = timestamp;
+    const rate = programMotionOwner === 'drag' ? PROGRAM_DRAG_EASE_RATE : PROGRAM_WHEEL_EASE_RATE;
+    const nextY = currentY + distance * (1 - Math.exp(-rate * elapsed));
+    programMotionExpectedY = nextY;
+    window.scrollTo({ top: nextY, behavior: 'instant' });
+    updateProgram();
+    programMotionFrame = requestAnimationFrame(animateProgramMotion);
 }
 
-function startProgramWheel() {
-    if (programWheelRaf === null) {
-        programWheelRaf = requestAnimationFrame(animateProgramWheel);
+function moveProgramTo(targetY, owner) {
+    programMotionTargetY = targetY;
+    programMotionOwner = owner;
+    if (programMotionFrame === null) {
+        programMotionLastTime = 0;
+        programMotionFrame = requestAnimationFrame(animateProgramMotion);
     }
 }
 
@@ -110,41 +121,110 @@ function updateTravel() {
     // Hero/About use their own wide-screen scale. Program stays fluid, so its
     // travel must be calculated from the actual program viewport width.
     const viewportWidth = viewport ? viewport.clientWidth : window.innerWidth;
-    currentTravel = Math.max(0, track.scrollWidth - viewportWidth + pad);
+    const nextTravel = Math.max(0, track.scrollWidth - viewportWidth + pad);
+    if (Math.abs(nextTravel - currentTravel) > 1) stopProgramMotion();
+    currentTravel = nextTravel;
     program.style.setProperty('--program-travel', `${currentTravel}px`);
     currentProgress = Math.min(currentProgress, currentTravel);
-    const introHeight = mobileProgramQuery.matches && programIntro ? programIntro.offsetHeight : 0;
-    startOffset = program.offsetTop + introHeight;
-    if (mobileProgramQuery.matches) renderProgramTrack();
+    startOffset = program.getBoundingClientRect().top + window.scrollY;
+    updateProgram();
 }
 
 function updateProgram() {
     if (!program || !track) return;
-    if (mobileProgramQuery.matches) {
-        renderProgramTrack();
-        return;
+    if (!mobileProgramQuery.matches) {
+        currentProgress = Math.min(Math.max(window.scrollY - startOffset, 0), currentTravel);
     }
-    const progress = Math.min(Math.max(window.scrollY - startOffset, 0), currentTravel);
-    currentProgress = progress;
     renderProgramTrack();
 }
 
-window.addEventListener('resize', () => {
-    updateWideDesktopScale();
-    updateTravel();
-    updateProgram();
-}, { passive: true });
+function scheduleProgramUpdate() {
+    if (programScrollFrame !== null) return;
+    programScrollFrame = requestAnimationFrame(() => {
+        programScrollFrame = null;
+        updateProgram();
+    });
+}
 
-window.addEventListener('scroll', () => {
-    updateProgram();
+function scheduleTravelUpdate() {
+    if (programMeasureFrame !== null) return;
+    programMeasureFrame = requestAnimationFrame(() => {
+        programMeasureFrame = null;
+        updateTravel();
+    });
+}
 
-    // If the page was moved by the native scrollbar, keyboard, or another
-    // input source, use that position as the next wheel animation baseline.
-    if (programWheelRaf === null) {
-        programWheelTargetY = null;
-        programWheelCurrentY = window.scrollY;
+function onProgramWheel(e) {
+    if (mobileProgramQuery.matches || currentTravel <= 0) return;
+    if (e.ctrlKey) {
+        stopProgramMotion();
+        return;
     }
+    if (!e.cancelable) {
+        stopProgramMotion();
+        return;
+    }
+    if (isDragging) {
+        e.preventDefault();
+        return;
+    }
+
+    // Own wheel input from just before the program through its exit. The
+    // target is allowed past either edge, so the next section starts moving
+    // without a separate handoff or a stored overflow burst.
+    const currentY = window.scrollY;
+    const zoneStart = startOffset - window.innerHeight;
+    const zoneEnd = startOffset + currentTravel + window.innerHeight;
+    if (currentY < zoneStart || currentY > zoneEnd) {
+        stopProgramMotion();
+        return;
+    }
+
+    const rawDelta = e.deltaY || e.deltaX;
+    if (!rawDelta) return;
+    const delta = rawDelta * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+    const remaining = programMotionTargetY === null ? 0 : programMotionTargetY - currentY;
+    const continuesWheelDirection = programMotionOwner === 'wheel'
+        && Math.sign(remaining) === Math.sign(delta);
+    const baseY = continuesWheelDirection ? programMotionTargetY : currentY;
+    const maxScrollY = Math.max(0, document.scrollingElement.scrollHeight - window.innerHeight);
+    const desiredY = Math.min(Math.max(baseY + delta, 0), maxScrollY);
+    const limitedY = currentY + Math.min(
+        Math.max(desiredY - currentY, -PROGRAM_WHEEL_MAX_LEAD),
+        PROGRAM_WHEEL_MAX_LEAD
+    );
+
+    e.preventDefault();
+    moveProgramTo(limitedY, 'wheel');
+}
+
+window.addEventListener('resize', () => {
+    stopProgramMotion();
+    updateWideDesktopScale();
+    scheduleTravelUpdate();
 }, { passive: true });
+window.addEventListener('scroll', () => {
+    if (programMotionOwner !== null && programMotionExpectedY !== null
+        && Math.abs(window.scrollY - programMotionExpectedY) > 2) {
+        stopProgramMotion();
+    }
+    if (programMotionOwner === null) scheduleProgramUpdate();
+}, { passive: true });
+window.addEventListener('wheel', onProgramWheel, { passive: false });
+document.addEventListener('pointerdown', stopProgramMotion, { capture: true, passive: true });
+window.addEventListener('keydown', (e) => {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) {
+        stopProgramMotion();
+    }
+});
+
+// The SVG or viewport can change size after the first render. Keep the sticky
+// section's vertical travel equal to the track's actual horizontal travel.
+if (window.ResizeObserver && track && program) {
+    const programResizeObserver = new ResizeObserver(scheduleTravelUpdate);
+    programResizeObserver.observe(track);
+    programResizeObserver.observe(document.querySelector('.program-viewport'));
+}
 
 function onDragStart(e) {
     const ev = e.touches ? e.touches[0] : e;
@@ -152,16 +232,10 @@ function onDragStart(e) {
     if (e.type === 'mousedown' && e.button !== 0) return;
     dragStartX = ev.clientX;
     dragStartY = ev.clientY;
-    dragStartScroll = currentProgress;
+    dragStartScroll = mobileProgramQuery.matches ? currentProgress : window.scrollY;
     touchAxis = null;
     stopProgramInertia();
-    stopProgramWheel();
-    if (!mobileProgramQuery.matches) {
-        // Start the desktop drag from the real page position. The pointer
-        // will update the target while the same RAF smoother moves the page.
-        programWheelCurrentY = window.scrollY;
-        programWheelTargetY = window.scrollY;
-    }
+    if (!mobileProgramQuery.matches) stopProgramMotion();
     lastDragX = ev.clientX;
     lastDragTime = performance.now();
 
@@ -191,9 +265,9 @@ function onDragMove(e) {
 
     if (!isDragging) return;
     const deltaX = ev.clientX - dragStartX;
-    const newProgress = Math.min(Math.max(dragStartScroll - deltaX, 0), currentTravel);
-    const previousProgress = currentProgress;
     if (mobileProgramQuery.matches) {
+        const newProgress = Math.min(Math.max(dragStartScroll - deltaX, 0), currentTravel);
+        const previousProgress = currentProgress;
         currentProgress = newProgress;
         const now = performance.now();
         const elapsed = Math.max(now - lastDragTime, 1);
@@ -203,8 +277,11 @@ function onDragMove(e) {
         lastDragTime = now;
         renderProgramTrack();
     } else {
-        programWheelTargetY = clampProgramWheelY(startOffset + newProgress);
-        startProgramWheel();
+        const nextScrollY = Math.min(
+            Math.max(dragStartScroll - deltaX, startOffset),
+            startOffset + currentTravel
+        );
+        moveProgramTo(nextScrollY, 'drag');
     }
     e.preventDefault();
 }
@@ -220,12 +297,7 @@ function onDragEnd(e) {
     }
     isDragging = false;
     sticky.style.cursor = 'grab';
-    if (!mobileProgramQuery.matches) {
-        // Keep easing to the last pointer position after the mouse is released.
-        startProgramWheel();
-    } else {
-        startProgramInertia();
-    }
+    if (mobileProgramQuery.matches) startProgramInertia();
     touchAxis = null;
 }
 
@@ -238,67 +310,9 @@ document.addEventListener('touchmove', onDragMove, { passive: false });
 document.addEventListener('touchend', onDragEnd, { passive: false });
 document.addEventListener('touchcancel', onDragEnd, { passive: false });
 
-function onProgramAutoScrollStart(e) {
-    if (e.button !== 1) return;
-
-    // Let the browser's middle-button autoscroll own window.scrollY from here.
-    stopProgramWheel();
-    programWheelCurrentY = window.scrollY;
-}
-
-document.addEventListener('mousedown', onProgramAutoScrollStart);
-
-function onWheel(e) {
-    if (mobileProgramQuery.matches || isDragging) return;
-
-    const rect = sticky.getBoundingClientRect();
-    const isOverProgram = e.clientX >= rect.left && e.clientX <= rect.right
-        && e.clientY >= rect.top && e.clientY <= rect.bottom;
-    if (!isOverProgram) return;
-
-    const endOffset = startOffset + currentTravel;
-    const currentScrollY = window.scrollY;
-    if (currentScrollY < startOffset - 1 || currentScrollY > endOffset + 1) return;
-
-    const rawDelta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
-    if (rawDelta === 0) return;
-
-    let delta = rawDelta;
-    if (e.deltaMode === 1) delta *= 16;
-    else if (e.deltaMode === 2) delta *= 100;
-
-    if (programWheelTargetY === null || programWheelCurrentY === null) {
-        programWheelCurrentY = currentScrollY;
-        programWheelTargetY = currentScrollY;
-    }
-
-    const nextWheelTargetY = programWheelTargetY + delta * PROGRAM_WHEEL_MULT;
-    const isAtProgramStart = currentScrollY <= startOffset + PROGRAM_WHEEL_EDGE_EPSILON
-        && nextWheelTargetY <= startOffset + PROGRAM_WHEEL_EDGE_EPSILON;
-    const isAtProgramEnd = currentScrollY >= endOffset - PROGRAM_WHEEL_EDGE_EPSILON
-        && nextWheelTargetY >= endOffset - PROGRAM_WHEEL_EDGE_EPSILON;
-
-    // Let the page continue scrolling once horizontal travel reaches either edge.
-    if ((delta < 0 && isAtProgramStart) || (delta > 0 && isAtProgramEnd)) {
-        stopProgramWheel();
-        return;
-    }
-
-    programWheelTargetY = clampProgramWheelY(nextWheelTargetY);
-
-    e.preventDefault();
-    startProgramWheel();
-}
-
-sticky.addEventListener('wheel', onWheel, { passive: false });
-
-window.addEventListener('load', () => {
-    updateTravel();
-    updateProgram();
-});
+window.addEventListener('load', scheduleTravelUpdate);
 
 updateTravel();
-updateProgram();
 
 // Video triangles hover
 document.querySelectorAll('.tri-video').forEach(function(triangle) {

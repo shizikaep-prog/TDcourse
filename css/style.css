@@ -7,6 +7,7 @@
     --display: "Tektur";
     --body: "Nunito Sans";
     --wide-desktop-scale: 1;
+    --wide-desktop-background-height: 100%;
 }
 
 /* Tektur fonts */
@@ -98,6 +99,10 @@ button { font: inherit; }
    Fixed-position artwork is clipped at the page edge so it cannot create a
    second scrollable area on the right. */
 @media (min-width: 1921px) {
+    body {
+        background-size: auto var(--wide-desktop-background-height);
+    }
+
     main#top {
         width: 100%;
         max-width: none;
@@ -475,10 +480,7 @@ button { font: inherit; }
     transition: transform 0.2s ease;
 }
 
-.logo:hover {
-  
-
-}
+.logo:hover { transform: scale(1.08); }
 .logo img {
     display: block;
     width: 68px;
@@ -515,10 +517,14 @@ button { font: inherit; }
     box-sizing: border-box;
     margin: -5px 0;
     transform: skewX(7deg);
+    transition: transform 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
     clip-path: polygon(0% 0%, 92% 0%, 100% 100%, 8% 100%);
     padding-left: 30px;
     padding-right: 30px;
 }
+.edition:hover { transform: skewX(7deg) scale(1.05); }
 .edition span {
     display: inline-block;
     transform: skewX(-7deg);
@@ -1025,7 +1031,8 @@ button { font: inherit; }
 .lesson-track picture { display: block; }
 .lesson-track img {
     display: block;
-    height: auto;
+    height: min(781px, 80vh);
+    aspect-ratio: 5727 / 781;
     max-height: 80vh;
     width: auto;
     max-width: none;
@@ -1329,7 +1336,7 @@ button { font: inherit; }
     .player-btn-play { width: 68px; height: 68px; }
     .program-viewport { padding-left: 16px; }
     .lesson-track { gap: 20px; }
-    .lesson-track img { max-height: 60vh; }
+    .lesson-track img { height: min(781px, 60vh); max-height: 60vh; }
 }
 
 /* Мобильная версия Hero: hero-right как фон для hero-left */
@@ -1933,7 +1940,11 @@ button { font: inherit; }
         overflow: hidden;
     }
     .lesson-track { touch-action: pan-y; }
-    .lesson-track img { max-height: min(62svh, 520px); }
+    .lesson-track img {
+        height: min(725px, 62svh, 520px);
+        aspect-ratio: 5727 / 725;
+        max-height: min(62svh, 520px);
+    }
 
     .data-image-section { padding: 0; }
     .data-image-section picture,
